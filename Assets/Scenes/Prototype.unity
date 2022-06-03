@@ -292,7 +292,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a3676c5953633447ab3e6cc507c8417, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sens: 0.33
+  sens: 1
   invertedY: 0
   invertedX: 0
   lockCursor: 1
@@ -2352,4 +2352,4 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1.0000001, y: 0.25, z: 1.0000002}
-  m_Center: {x: 0, y: -1.125, z: 0}
+  m_Center: {x: 0, y: -1, z: 0}
