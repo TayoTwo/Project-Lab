@@ -63,13 +63,17 @@ public class PlayerController : MonoBehaviour
 
         }
 
+        Vector3 vel;
+
         if(isGrounded && rb.velocity.magnitude > maxGroundSpeed){
 
-            rb.velocity = rb.velocity.normalized * maxGroundSpeed;
+            vel = new Vector3(rb.velocity.normalized.x * maxGroundSpeed,rb.velocity.y,rb.velocity.normalized.z * maxGroundSpeed);
+            rb.velocity = vel;
 
         } else if(!isGrounded && rb.velocity.magnitude > maxAirSpeed){
 
-            rb.velocity = rb.velocity.normalized * maxAirSpeed;
+            vel = new Vector3(rb.velocity.normalized.x * maxAirSpeed,rb.velocity.y,rb.velocity.normalized.z * maxAirSpeed);
+            rb.velocity = vel;
 
         }
 
