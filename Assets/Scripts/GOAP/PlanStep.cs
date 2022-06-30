@@ -3,25 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 [System.Serializable]
 public class PlanStep {
-    private GOAPAction action;
-    private GOAPWorldState<string,bool> desiredState;
+    public GOAPAction action;
+    public List<GOAPState> desiredState;
     
-    public PlanStep(GOAPAction a,GOAPWorldState<string,bool> dws){
+    public PlanStep(GOAPAction a,List<GOAPState> dws){
 
         action = a;
         desiredState = dws;
-
-    }
-
-    public GOAPAction GetAction(){
-
-        return action;
-
-    }
-
-    public GOAPWorldState<string,bool> getDesiredWorldState(){
-
-        return desiredState;
 
     }
 

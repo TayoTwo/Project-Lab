@@ -1,185 +1,186 @@
-// using System.Collections;
+using System.Collections;
 
-// using System.Collections.Generic;
+using System.Collections.Generic;
 
-// using UnityEngine;
+using UnityEngine;
 
-// public class GOAPActionPlanner : MonoBehaviour
-// {
-//     public GOAPAgent agent;
-//     public void Awake(){
+public class GOAPActionPlanner : MonoBehaviour
+{
+    public GOAPAgent agent;
+    public void Awake(){
 
-//         agent = GetComponent<GOAPAgent>();
+        agent = GetComponent<GOAPAgent>();
 
-//     }
+    }
 
-//     public Plan FindBestPlan(GOAPGoal currentGoal){
+    public Plan FindBestPlan(GOAPGoal currentGoal){
 
-//         List<GOAPState> dws = currentGoal.desiredWorldState;
+        List<GOAPState> dws = currentGoal.desiredWorldState;
         
-//         if(dws == null){
+        if(dws == null){
 
-//             return null;
+            return null;
 
-//         }
+        }
 
-//         (TreeNode<PlanStep> tree, bool hasSolution) =  BuidPlanTree(new TreeNode<PlanStep>(new PlanStep(agent.currentAction,dws)));
+        (TreeNode<PlanStep> tree, bool hasSolution) =  BuidPlanTree(new TreeNode<PlanStep>(new PlanStep(agent.currentAction,dws)));
 
-//         if(!hasSolution){
+        if(!hasSolution){
 
-//             //Debug.Log("Couldn't Find Valid Tree");
-//             return null;
+            //Debug.Log("Couldn't Find Valid Tree");
+            return null;
 
-//         } else {
+        } else {
             
-//             //Debug.Log("Found Valid Tree");
-//             List<Plan> plans = treeToPlan(tree);
+            //Debug.Log("Found Valid Tree");
+            List<Plan> plans = treeToPlan(tree);
 
-//             //PrintPlan(plans[0]);
+            //PrintPlan(plans[0]);
 
-//             return GetCheapestPlan(plans);
+            return GetCheapestPlan(plans);
 
-//         }
-
-
-//     }
-
-//     List<Plan> treeToPlan(TreeNode<PlanStep> tree){
-
-//         List<Plan> plans = new List<Plan>();
-
-//         //If the tree doesn't have any children then just add the roots action to the plan
-//         if(tree.children.Count == 0){
-
-//             GOAPAction a = tree.value.action;
-
-//             plans.Add(new Plan(new List<GOAPAction>(){a}, tree.value.action.getCost(agent.worldState)));
-
-//             return plans;
-
-//         }
-
-//         //Loop through every branch in the tree and add its actions to the plan
-//         foreach(TreeNode<PlanStep> branch in tree.children){
-
-//             foreach(Plan childPlan in treeToPlan(branch)){
-
-//                 childPlan.AddToPlan(tree.value.action,tree.value.action.getCost(agent.worldState));
-//                 plans.Add(childPlan);
+        }
 
 
-//             }
+    }
 
-//         }
+    List<Plan> treeToPlan(TreeNode<PlanStep> tree){
+
+        List<Plan> plans = new List<Plan>();
+
+        //If the tree doesn't have any children then just add the roots action to the plan
+        if(tree.children.Count == 0){
+
+            GOAPAction a = tree.value.action;
+
+            plans.Add(new Plan(new List<GOAPAction>(){a}, tree.value.action.getCost(agent.worldState)));
+
+            return plans;
+
+        }
+
+        //Loop through every branch in the tree and add its actions to the plan
+        foreach(TreeNode<PlanStep> branch in tree.children){
+
+            foreach(Plan childPlan in treeToPlan(branch)){
+
+                childPlan.AddToPlan(tree.value.action,tree.value.action.getCost(agent.worldState));
+                plans.Add(childPlan);
+
+
+            }
+
+        }
        
-//         return plans;
+        return plans;
 
-//     }
+    }
 
-//     public Plan GetCheapestPlan(List<Plan> plans){
+    public Plan GetCheapestPlan(List<Plan> plans){
 
-//         Plan bestPlan = plans[0];
+        Plan bestPlan = plans[0];
 
-//         //Loop through each plan and chechk which has the lowest total cost
-//         foreach(Plan plan in plans){
+        //Loop through each plan and chechk which has the lowest total cost
+        foreach(Plan plan in plans){
 
-//             //PrintPlan(plan);
-//             if(plan.cost < bestPlan.cost){
+            //PrintPlan(plan);
+            if(plan.cost < bestPlan.cost){
 
-//                 bestPlan = plan;
+                bestPlan = plan;
 
-//             }
+            }
 
-//         }
+        }
 
-//         return bestPlan;
+        return bestPlan;
 
-//     }
+    }
 
-//     public (TreeNode<PlanStep>, bool) BuidPlanTree(TreeNode<PlanStep> stepTree){
+    public (TreeNode<PlanStep>, bool) BuidPlanTree(TreeNode<PlanStep> stepTree){
 
-//         bool hasSolution = false;
+        bool hasSolution = false;
 
-//         List<GOAPState> desiredWorldState = new List<GOAPState>(stepTree.value.desiredState);
+        List<GOAPState> desiredWorldState = new List<GOAPState>(stepTree.value.desiredState);
 
-//         //If the desired world state has any states in common with the current world state then remove it
-//         foreach(GOAPState state in desiredWorldState.ToArray()){
+        //If the desired world state has any states in common with the current world state then remove it
+        foreach(GOAPState state in desiredWorldState.ToArray()){
 
-//             if(agent.worldState.Find(x => x.key == state.key).value.Equals(state.value)){
+            Debug.Log(state.key);
+            if(agent.worldState.Find(x => x.key == state.key).value.Equals(state.value)){
 
-//                 //Debug.Log("STATE ALREADY SATISFIED");
-//                 desiredWorldState.Remove(state);
+                //Debug.Log("STATE ALREADY SATISFIED");
+                desiredWorldState.Remove(state);
 
-//             }
+            }
 
-//         }
-//         //Loop through the possible actions and check if their effects would get us to our desired world state
-//         foreach(GOAPAction action in agent.actions){
+        }
+        //Loop through the possible actions and check if their effects would get us to our desired world state
+        foreach(GOAPAction action in agent.getActions()){
 
-//             bool shouldUseAction = false;
-//             List<GOAPState> effects = action.getEffects();
-//             List<GOAPState> tempDesiredWorldState = new List<GOAPState>(desiredWorldState);
+            bool shouldUseAction = false;
+            List<GOAPState> effects = action.getEffects();
+            List<GOAPState> tempDesiredWorldState = new List<GOAPState>(desiredWorldState);
 
-//             //If the action's effects match our desired world state then remove it to check what else needs to be satisfied
-//             //We also mark the current action as needed in the plan
-//             foreach(GOAPState state in tempDesiredWorldState.ToArray()){
+            //If the action's effects match our desired world state then remove it to check what else needs to be satisfied
+            //We also mark the current action as needed in the plan
+            foreach(GOAPState state in tempDesiredWorldState.ToArray()){
 
-//                 if(!effects.Exists(x => x.key == state.key)) continue;
+                if(!effects.Exists(x => x.key == state.key)) continue;
 
-//                 if(effects.Find(x => x.key == state.key).value.Equals(state.value)){
+                if(effects.Find(x => x.key == state.key).value.Equals(state.value)){
 
-//                     tempDesiredWorldState.Remove(state);
-//                     shouldUseAction = true;
+                    tempDesiredWorldState.Remove(state);
+                    shouldUseAction = true;
 
-//                 }
+                }
  
-//             }   
+            }   
 
-//             //If the action should be used in the plan then add its preconditions to the desired world state
-//             //We then check in turn what steps are needed to get these preconditions
-//             if(shouldUseAction){
+            //If the action should be used in the plan then add its preconditions to the desired world state
+            //We then check in turn what steps are needed to get these preconditions
+            if(shouldUseAction){
 
-//                 List<GOAPState> preConditions = action.getPreConditions();
+                List<GOAPState> preConditions = action.getPreConditions();
 
-//                 foreach(GOAPState state in preConditions){
+                foreach(GOAPState state in preConditions){
                     
-//                     tempDesiredWorldState.Add(state);
+                    tempDesiredWorldState.Add(state);
 
-//                 }
+                }
 
-//                 //Debug.Log("Action " + action.actionName + " is valid");
+                //Debug.Log("Action " + action.actionName + " is valid");
 
-//                 (TreeNode<PlanStep> branch, bool branchHasSolution) = BuidPlanTree(
-//                     new TreeNode<PlanStep>(
-//                         new PlanStep(action,
-//                         new List<GOAPState>(tempDesiredWorldState))));
+                (TreeNode<PlanStep> branch, bool branchHasSolution) = BuidPlanTree(
+                    new TreeNode<PlanStep>(
+                        new PlanStep(action,
+                        new List<GOAPState>(tempDesiredWorldState))));
 
-//                 if(tempDesiredWorldState.Count == 0 || branchHasSolution){
+                if(tempDesiredWorldState.Count == 0 || branchHasSolution){
 
-//                     //Debug.Log("Adding to tree " + action.actionName);
-//                     stepTree.children.AddLast(branch);   
-//                     hasSolution = true;
+                    //Debug.Log("Adding to tree " + action.actionName);
+                    stepTree.children.AddLast(branch);   
+                    hasSolution = true;
 
-//                 }
+                }
 
-//             }
+            }
 
-//         }
+        }
 
-//         return (stepTree,hasSolution);
+        return (stepTree,hasSolution);
 
-//     }
+    }
 
-//     void PrintPlan(Plan plan){
+    void PrintPlan(Plan plan){
 
-//         //Debug.Log("PLAN - Steps:" + plan.actions.Count);        
+        //Debug.Log("PLAN - Steps:" + plan.actions.Count);        
 
-//         foreach(GOAPAction a in plan.actions){
+        foreach(GOAPAction a in plan.actions){
 
-//             Debug.Log(a.actionName);
+            Debug.Log(a.actionName);
 
-//         }
+        }
 
-//     }
+    }
 
-// }
+}

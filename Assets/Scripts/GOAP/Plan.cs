@@ -28,16 +28,4 @@ public class Plan {
 
     }
 
-    public List<GOAPAction> GetActions(){
-
-        return actions;
-
-    }
-
-    public int getCost(){
-
-        return cost;
-
-    }
-
 }

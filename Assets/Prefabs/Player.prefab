@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5894320294416388853}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 5894320294684360575}
   - component: {fileID: 5894320294684360573}
   - component: {fileID: 5894320294684360572}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Grounded
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -104,7 +104,7 @@ GameObject:
   - component: {fileID: 5894320295273975334}
   - component: {fileID: 5894320295273975337}
   - component: {fileID: 5894320295273975336}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Main Camera
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -223,7 +223,8 @@ GameObject:
   - component: {fileID: 5894320295706084360}
   - component: {fileID: 5894320295706084361}
   - component: {fileID: 8663836002421432102}
-  m_Layer: 0
+  - component: {fileID: 4948858431067478087}
+  m_Layer: 3
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -293,11 +294,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   groundAcceleration: 15
-  maxGroundSpeed: 5
+  maxGroundSpeed: 7
   airAcceleration: 10
-  maxAirSpeed: 15
+  maxAirSpeed: 10
   noInputDeccel: 2
-  jumpForce: 5
+  jumpForce: 6
   ground: {fileID: 5894320294684360572}
   isGrounded: 0
 --- !u!114 &8663836002421432102
@@ -314,6 +315,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   items: []
   invObj: {fileID: 0}
+--- !u!114 &4948858431067478087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5894320295706084362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffcb768444ba3ff4f9d27c2640b5ee9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  currentHealth: 0
+  isHealthy: 0
 --- !u!1 &5894320296206526787
 GameObject:
   m_ObjectHideFlags: 0
@@ -326,7 +342,7 @@ GameObject:
   - component: {fileID: 5894320296206526812}
   - component: {fileID: 5894320296206526815}
   - component: {fileID: 5894320296206526814}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}

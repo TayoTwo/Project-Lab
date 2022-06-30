@@ -8,17 +8,27 @@ public class GOAPGoal {
 
     public string goalName;
     public int priority;
-    public GOAPWorldState<string,bool> desiredWorldState;
+    public List<GOAPState> desiredWorldState = new List<GOAPState>();
 
-    public GOAPGoal (GOAPWorldState<string,bool>  ds){
+    public GOAPGoal (List<GOAPState> ds){
 
         desiredWorldState = ds;
 
     }
 
-    public bool isValid(GOAPWorldState<string,bool> worldState){
+    public bool isValid(GOAPAgent agent){
+
+        AgentController agentController = agent.GetComponent<AgentController>();
 
         switch(goalName){
+
+            case "KillPlayer":
+
+                return !agent.worldState.Find(x => x.key == "isPlayerDead").GetValue(agent);
+
+            case "StayHealthy":
+
+                return !agentController.health.isHealthy;
 
             default:
                 return false;

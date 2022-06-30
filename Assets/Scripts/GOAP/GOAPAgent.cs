@@ -6,23 +6,50 @@ public class GOAPAgent : MonoBehaviour
 {
 
     [Header("Live Agent Information")]
-    //public Plan plan;
+    public Plan plan;
     public int currentPlanStep;
     public GOAPGoal currentGoal;
     public GOAPAction currentAction;
-    public GOAPWorldState<string,bool> worldState;
+    public List<GOAPState> worldState;
     [Header("Static Data")]
-    [SerializeField]
-    public List<GOAPGoal> goals;
-    [SerializeField]
-    public List<GOAPAction> actions = new List<GOAPAction>();
-    //GOAPActionPlanner actionPlanner;
+    public AgentSettings agentSettings;
+    List<GOAPGoal> goals;
+    List<GOAPAction> actions = new List<GOAPAction>();
+    GOAPActionPlanner actionPlanner;
     GOAPGoal highestPriorityGoal;
 
-    void Start(){
+    void Awake(){
 
-        //actionPlanner = GetComponent<GOAPActionPlanner>();
+        actions = agentSettings.actions;
+        goals = agentSettings.goals;
+
+        InitializeWorldState();
+        //Debug.Log(goals.Count);
+        actionPlanner = GetComponent<GOAPActionPlanner>();
         currentAction = actions[0];
+
+    }
+
+    
+    void InitializeWorldState(){
+
+        foreach(GOAPAction action in actions){
+
+            List<GOAPState> effects = action.getEffects();
+
+            foreach(GOAPState state in effects){
+
+                if(effects.Exists(x => x.key == state.key)) continue;
+
+                if(!effects.Find(x => x.key == state.key).value.Equals(state.value)){
+
+                    worldState.Add(state);
+
+                } 
+
+            }
+
+        }
 
     }
 
@@ -33,17 +60,17 @@ public class GOAPAgent : MonoBehaviour
 
         //If the plan is empty then find a new plan
         //If the current goal is not the best goal or the current goal/action is invalid then change the plan
-        // if(plan is null || plan.actions.Count == 0
-        // || currentGoal != bestGoal || !currentGoal.isValid(this) || !currentAction.isValid(this)){
+        if(plan is null || plan.actions.Count == 0
+        || currentGoal != bestGoal || !currentGoal.isValid(this) || !currentAction.isValid(this)){
 
-        //     currentGoal = bestGoal;
-        //     plan = actionPlanner.FindBestPlan(currentGoal);
-        //     currentPlanStep = 0;
-        //     currentAction = plan.actions[currentPlanStep];
+            currentGoal = bestGoal;
+            plan = actionPlanner.FindBestPlan(currentGoal);
+            currentPlanStep = 0;
+            currentAction = plan.actions[currentPlanStep];
 
-        //     return;
+            return;
 
-        // }
+        }
 
         FollowPlan();
 
@@ -57,7 +84,7 @@ public class GOAPAgent : MonoBehaviour
         //Make a list of valid goals
         foreach(GOAPGoal g in goals){
 
-            if(g.isValid(worldState)){
+            if(g.isValid(this)){
 
                 validGoals.Add(g);
 
@@ -84,25 +111,34 @@ public class GOAPAgent : MonoBehaviour
 
     public void FollowPlan(){
 
-        // if(plan is null){
+        if(plan is null){
 
-        //     return;
+            return;
 
-        // }
+        }
 
-        // //Until the action has been complete continue to do it
-        // bool stepComplete = currentAction.perform(this);
+        //Until the action has been complete continue to do it
+        bool stepComplete = currentAction.perform(this);
 
-        // //If the step has been completed then go to the next step in the plan
-        // if(stepComplete && currentPlanStep < plan.actions.Count - 1){
+        //If the step has been completed then go to the next step in the plan
+        if(stepComplete && currentPlanStep < plan.actions.Count - 1){
 
-        //     currentPlanStep++;
-        //     currentAction = plan.actions[currentPlanStep];
+            currentPlanStep++;
+            currentAction = plan.actions[currentPlanStep];
 
-        // }
+        }
 
     }
 
+    public List<GOAPGoal> getGoals(){
 
+        return goals;
+
+    }
+    public List<GOAPAction> getActions(){
+
+        return actions;
+
+    }
 
 }

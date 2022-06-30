@@ -34,7 +34,7 @@ public class MovingPlatform : MonoBehaviour
 
     public void Open(){
 
-        Debug.Log("OPEN");
+        //Debug.Log("OPEN");
         targetPosition = target;
         canMove = true;
 
@@ -42,7 +42,7 @@ public class MovingPlatform : MonoBehaviour
 
     public void Close(){
 
-        Debug.Log("CLOSE");
+       // Debug.Log("CLOSE");
         targetPosition = origin;
         canMove = true;
   

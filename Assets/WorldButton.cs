@@ -26,7 +26,7 @@ public class WorldButton : MonoBehaviour
 
         if(colliders.Length > 0 && !triggered){
 
-            Debug.Log(colliders[0].name);
+            //Debug.Log(colliders[0].name);
 
             MoveDown();
 

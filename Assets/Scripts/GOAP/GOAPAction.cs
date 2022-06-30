@@ -8,10 +8,10 @@ public class GOAPAction
 
     public string actionName;
     public int cost;
-    public GOAPWorldState<string,bool> preConditions;
-    public GOAPWorldState<string,bool> effects;
+    public List<GOAPState> preConditions = new List<GOAPState>();
+    public List<GOAPState> effects = new List<GOAPState>();
 
-    public GOAPAction(string name, GOAPWorldState<string,bool> pre,GOAPWorldState<string,bool> eff){
+    public GOAPAction(string name, List<GOAPState> pre,List<GOAPState> eff){
 
         actionName = name;
         preConditions = pre;
@@ -20,20 +20,20 @@ public class GOAPAction
     }
 
 
-    public GOAPWorldState<string,bool> getPreConditions(){
+    public List<GOAPState> getPreConditions(){
 
         return preConditions;
 
     }
 
-    public GOAPWorldState<string,bool> getEffects(){
+    public List<GOAPState> getEffects(){
 
         return effects;
 
     }
 
     
-    public int getCost(GOAPWorldState<string,bool> worldState){
+    public int getCost(List<GOAPState> worldState){
 
         return cost;
 
@@ -43,9 +43,9 @@ public class GOAPAction
 
         bool isValid = true;
 
-        foreach(KeyValuePair<string, bool> entry in getPreConditions().data){
+        foreach(GOAPState state in getPreConditions()){
 
-            if(!agent.worldState.HasKey(entry.Key) || agent.worldState.GetValue(entry.Key) != entry.Value){
+            if(!agent.worldState.Find(x => x.key == state.key).value.Equals(state.value)){
 
                 isValid = false;
 
@@ -63,15 +63,27 @@ public class GOAPAction
 
         switch(actionName){
 
+            case "Patrol":
+                agentController.Patrol();
+                break;
+            case "Chase":
+                agentController.Chase();
+                break;
+            case "Attack":
+                agentController.Attack();
+                break;
+            case "Heal":
+                agentController.FindHealthStation();
+                break;
 
 
         }
 
         bool allConditionsMet = true;
 
-        foreach(KeyValuePair<string, bool> entry in getEffects().data){
+        foreach(GOAPState state in getEffects()){
 
-            if(!agent.worldState.HasKey(entry.Key) || agent.worldState.GetValue(entry.Key) != entry.Value){
+            if(!agent.worldState.Find(x => x.key == state.key).value.Equals(state.value)){
 
                 allConditionsMet = false;
 

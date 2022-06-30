@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbe38f8c0f50e724c8ec1062ab8ad7dc, type: 3}
+  m_Name: Basic Agent
+  m_EditorClassIdentifier: 
+  goals:
+  - goalName: KillPlayer
+    priority: 2
+    desiredWorldState:
+    - key: isPlayerDead
+      value: 1
+  - goalName: StayHealthy
+    priority: 4
+    desiredWorldState:
+    - key: isHealthy
+      value: 1
+  actions:
+  - actionName: Patrol
+    cost: 2
+    preConditions: []
+    effects:
+    - key: canSeePlayer
+      value: 1
+  - actionName: Chase
+    cost: 2
+    preConditions:
+    - key: canSeePlayer
+      value: 1
+    effects:
+    - key: inRangeOfPlayer
+      value: 1
+  - actionName: Attack
+    cost: 2
+    preConditions:
+    - key: inRangeOfPlayer
+      value: 1
+    effects:
+    - key: isPlayerDead
+      value: 1
+  - actionName: Heal
+    cost: 2
+    preConditions: []
+    effects:
+    - key: isHealthy
+      value: 1
