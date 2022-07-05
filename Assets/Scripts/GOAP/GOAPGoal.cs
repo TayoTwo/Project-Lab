@@ -26,9 +26,19 @@ public class GOAPGoal {
 
                 return !agent.worldState.Find(x => x.key == "isPlayerDead").GetValue(agent);
 
-            case "StayHealthy":
+            case "GetSupport":
 
-                return !agentController.health.isHealthy;
+                if(agentController.AgentCount() > 1){
+
+                    return !agentController.health.isHealthy;
+
+                }
+
+                return false;
+
+            case "Respond":
+
+                return agentController.hasBeenCalled;
 
             default:
                 return false;

@@ -7,22 +7,25 @@ public class AgentController : MonoBehaviour
 {
     
     [Header("Movement")]
-    public bool goingToA;
-    public float changeTargetDis;
-    public bool xAxis;
+    public int patrolIndex;
     public float distance;
     public Vector3 targetPos;
     public float patrolMoveSpeed;
     public float chaseMoveSpeed;
-    Vector3 pointA;
-    Vector3 pointB;
+    public Transform[] patrolTransforms;
+    public int maxPatrolPoints;
+    public List<Vector3> patrolPositions;
+    Vector3 lastSeenPlayerLocation;
 
     [Header("Vision")]
     public float viewRadius;
     public float viewAngle;
     public LayerMask targetMask;
+    public LayerMask agentMask;
     public LayerMask obstacleMask;
-
+    public float changeTargetDis;
+    public float nearSupportRange;
+    public bool hasBeenCalled;
 
     [Header("Components")]
     public Light visionCone;
@@ -41,12 +44,15 @@ public class AgentController : MonoBehaviour
     public AudioSource audioSource;
     public Transform head;
     bool hasDealtDmg;
+    //Call System
+    Vector3 callPosition;
     GOAPAgent agent;
     GameObject player;
 
     // Start is called before the first frame update
     void Start()
     {
+
         //Initialize the agents components
         navMeshAgent = GetComponent<NavMeshAgent>();
         //animationController = GetComponent<AnimationController>();
@@ -56,20 +62,20 @@ public class AgentController : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
 
         //Set the patrol points
-        if(xAxis){
+        foreach(Transform t in patrolTransforms){
 
-            pointA = transform.position;
-            pointB = (2 * distance * transform.right) + transform.position;
-
-        } else {
-
-            pointA = transform.position;
-            pointB = (2 * distance * transform.forward) + transform.position;
+           AddPatrolPoint(t.position);
 
         }
         
         //Go to point A
-        ChangeTarget(pointA);
+        ChangeTarget(patrolPositions[0]);
+
+    }
+
+    public int AgentCount(){
+
+        return GameObject.FindGameObjectsWithTag("Agent").Length;
 
     }
 
@@ -152,43 +158,122 @@ public class AgentController : MonoBehaviour
 
     public void Chase(){
 
+        patrolIndex = patrolPositions.Count - 1;
+        lastSeenPlayerLocation = targetPos;
         navMeshAgent.speed = chaseMoveSpeed;
         ChangeVisualsColor(Color.red);
         ChangeTarget(targetPos);
 
     }
 
+    void AddPatrolPoint(Vector3 position){
+
+        if(patrolPositions.Count >= maxPatrolPoints){
+
+            patrolPositions.RemoveAt(0);
+
+        }
+
+        patrolPositions.Add(position);
+
+    }
+
     public void Patrol(){
+
+        if(!patrolPositions.Exists(x => x == lastSeenPlayerLocation) && lastSeenPlayerLocation != Vector3.zero){
+
+            patrolPositions[patrolPositions.Count - 1] = lastSeenPlayerLocation;
+
+        }
 
         navMeshAgent.speed = patrolMoveSpeed;
         ChangeVisualsColor(Color.white);
 
         //Change the target if we get close
-        if(goingToA){
+        if(Vector3.Distance(patrolPositions[patrolIndex],transform.position) > changeTargetDis){
 
-            if(Vector3.Distance(pointA,transform.position) > changeTargetDis){
-
-                ChangeTarget(pointA);
-
-            } else {
-
-                goingToA = false;
-
-            }
+            ChangeTarget(patrolPositions[patrolIndex]);
 
         } else {
 
-            if(Vector3.Distance(pointB,transform.position) > changeTargetDis){
+            if(patrolIndex + 1 < maxPatrolPoints){
 
-                ChangeTarget(pointB);
+                patrolIndex++;
 
             } else {
 
-                goingToA = true;
+                patrolIndex = 0;
 
             }
 
         }
+
+    }
+
+    public void SetCaller(AgentController c){
+
+        hasBeenCalled = true;
+        callPosition = c.transform.position;
+
+    }
+
+    public void Respond(){
+
+        if(Vector3.Distance(patrolPositions[patrolIndex],transform.position) > nearSupportRange){
+
+            agent.worldState.Find(x => x.key == "closeToCallPos").SetValue(false);
+            ChangeTarget(callPosition);
+
+        } else {
+
+            agent.worldState.Find(x => x.key == "closeToCallPos").SetValue(true);
+
+        }
+
+
+    }
+
+    public void Call(){
+
+        ChangeTarget(transform.position);
+
+        Collider[] targetsInViewSphere = Physics.OverlapSphere(display.transform.position,viewRadius,agentMask);
+        navMeshAgent.speed = chaseMoveSpeed;
+
+        //Loop through our targets and check if we have direct line of sight of them
+        for(int i = 0; i < targetsInViewSphere.Length;i++){
+
+            if( targetsInViewSphere[i].transform.root == transform) continue;
+
+            Transform t = targetsInViewSphere[i].transform.root;
+            Vector3 dir = (t.position - display.transform.position).normalized;
+
+            if(t.tag == "Agent"){
+
+                float dist = Vector3.Distance(t.position,display.transform.position);
+
+                if(!Physics.Raycast(display.transform.position,dir,dist,obstacleMask)){
+
+                    t.GetComponent<AgentController>().SetCaller(this);
+                    Debug.Log("CALLING: " + t.name);
+
+                }
+
+                if(dist < nearSupportRange){
+
+                    agent.worldState.Find(x => x.key == "getSupport").SetValue(true); 
+                    t.GetComponent<AgentController>().hasBeenCalled = false;  
+
+                } else {
+
+                    agent.worldState.Find(x => x.key == "getSupport").SetValue(false);   
+
+                }
+
+            }
+
+        }
+
 
     }
 
@@ -292,18 +377,24 @@ public class AgentController : MonoBehaviour
 
     }
 
-    void OnDrawGizmos(){
+    // void OnDrawGizmos(){
 
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(pointA,pointB);
+    //     for(int i = 0;i < maxPatrolPoints - 1;i++){
 
-        //View Radius
-        Gizmos.color = Color.white;
-        Gizmos.DrawWireSphere(transform.position,viewRadius);
+    //         Gizmos.color = Color.blue;
+    //         Gizmos.DrawLine(patrolPositions[i],patrolPositions[i+1]);
 
-        //
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position,targetPos);
+    //     }
 
-    }
+
+
+    //     //View Radius
+    //     Gizmos.color = Color.white;
+    //     Gizmos.DrawWireSphere(transform.position,viewRadius);
+
+    //     //
+    //     Gizmos.color = Color.red;
+    //     Gizmos.DrawLine(transform.position,targetPos);
+
+    // }
 }

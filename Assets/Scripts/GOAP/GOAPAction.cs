@@ -75,7 +75,12 @@ public class GOAPAction
             case "Heal":
                 agentController.FindHealthStation();
                 break;
-
+            case "Respond":
+                agentController.Respond();
+                break;
+            case "Call":
+                agentController.Call();
+                break;
 
         }
 

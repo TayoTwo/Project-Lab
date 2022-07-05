@@ -23,6 +23,16 @@ MonoBehaviour:
     desiredWorldState:
     - key: isHealthy
       value: 1
+  - goalName: GetSupport
+    priority: 5
+    desiredWorldState:
+    - key: getSupport
+      value: 1
+  - goalName: Respond
+    priority: 10
+    desiredWorldState:
+    - key: closeToCallPos
+      value: 1
   actions:
   - actionName: Patrol
     cost: 2
@@ -51,4 +61,16 @@ MonoBehaviour:
     preConditions: []
     effects:
     - key: isHealthy
+      value: 1
+  - actionName: Respond
+    cost: 2
+    preConditions: []
+    effects:
+    - key: closeToCallPos
+      value: 1
+  - actionName: Call
+    cost: 2
+    preConditions: []
+    effects:
+    - key: getSupport
       value: 1
