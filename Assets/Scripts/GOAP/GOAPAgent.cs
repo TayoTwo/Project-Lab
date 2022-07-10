@@ -20,11 +20,8 @@ public class GOAPAgent : MonoBehaviour
 
     void Awake(){
 
-        actions = agentSettings.actions;
-        goals = agentSettings.goals;
-
+        //plan = new Plan();
         InitializeWorldState();
-        //Debug.Log(goals.Count);
         actionPlanner = GetComponent<GOAPActionPlanner>();
         currentAction = actions[0];
 
@@ -32,6 +29,9 @@ public class GOAPAgent : MonoBehaviour
 
     
     void InitializeWorldState(){
+
+        actions = agentSettings.actions;
+        goals = agentSettings.goals;
 
         foreach(GOAPAction action in actions){
 
@@ -51,6 +51,8 @@ public class GOAPAgent : MonoBehaviour
 
         }
 
+
+
     }
 
     void Update(){
@@ -58,18 +60,34 @@ public class GOAPAgent : MonoBehaviour
         //Update the best goal
         GOAPGoal bestGoal = GetBestGoal();
 
+        if(plan == null){
+
+            Debug.Log("PLAN IS NULL");
+
+        } else {
+
+            Debug.Log("PLAN IS NOT NULL");
+
+        }
+
         //If the plan is empty then find a new plan
         //If the current goal is not the best goal or the current goal/action is invalid then change the plan
-        if(plan is null || plan.actions.Count == 0
-        || currentGoal != bestGoal || !currentGoal.isValid(this) || !currentAction.isValid(this)){
+        if(plan is null){
 
-            currentGoal = bestGoal;
-            plan = actionPlanner.FindBestPlan(currentGoal);
-            currentPlanStep = 0;
-            currentAction = plan.actions[currentPlanStep];
+            if(plan.actions.Count == 0
+            || currentGoal != bestGoal 
+            || !currentGoal.isValid(this) 
+            || !currentAction.isValid(this)){
 
-            return;
+                currentGoal = bestGoal;
+                plan = actionPlanner.FindBestPlan(currentGoal);
+                currentPlanStep = 0;
+                currentAction = plan.actions[currentPlanStep];
 
+                return;
+
+            }
+            
         }
 
         FollowPlan();
@@ -89,6 +107,13 @@ public class GOAPAgent : MonoBehaviour
                 validGoals.Add(g);
 
             }
+
+        }
+
+        if(validGoals.Count == 0){
+
+            Debug.Log("NO VALID GOALS");
+            return null;
 
         }
 

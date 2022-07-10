@@ -8,6 +8,11 @@ public class Plan {
     public List<GOAPAction> actions;
     public int cost;
 
+    public Plan(){
+
+        
+    }
+
     public Plan(List<GOAPAction> a,int c){
 
         actions = a;

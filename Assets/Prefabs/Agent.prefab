@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 197369563}
   - component: {fileID: 197369561}
   - component: {fileID: 197369562}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Spot Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 197369560}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.00000008940697, y: 0.5, z: 0.5000006}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -45,10 +45,10 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 25
   m_Range: 10
-  m_SpotAngle: 30
-  m_InnerSpotAngle: 21.80208
+  m_SpotAngle: 60
+  m_InnerSpotAngle: 0
   m_CookieSize: 10
   m_Shadows:
     m_Type: 0
@@ -124,7 +124,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 290040876}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sensors
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -158,7 +158,7 @@ GameObject:
   - component: {fileID: 434751923}
   - component: {fileID: 434751925}
   - component: {fileID: 434751924}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -330,7 +330,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 636519057}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Patrol Points
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -364,7 +364,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 665731241}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Screen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -400,7 +400,7 @@ GameObject:
   - component: {fileID: 995971442}
   - component: {fileID: 995971444}
   - component: {fileID: 995971443}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Display
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -481,7 +481,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1224733893}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Point 3
   m_TagString: Untagged
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
@@ -512,7 +512,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1708741834}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Point 1
   m_TagString: Untagged
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
@@ -546,7 +546,7 @@ GameObject:
   - component: {fileID: 1733827601}
   - component: {fileID: 1733827599}
   - component: {fileID: 1733827600}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: DmgSphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -640,7 +640,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1760259012}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Point 2
   m_TagString: Untagged
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
@@ -675,7 +675,7 @@ GameObject:
   - component: {fileID: 2034629794}
   - component: {fileID: 2034629793}
   - component: {fileID: 2034629792}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Casing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1641,7 +1641,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2280
+  m_VersionIndex: 2307
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -1693,7 +1693,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 02cb0a232004f1c48813b044fc4335ed, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1735,7 +1735,7 @@ GameObject:
   - component: {fileID: 6501641677822467215}
   - component: {fileID: 6501641677822467214}
   - component: {fileID: 6501641677822467209}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Base
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -1785,7 +1785,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 02cb0a232004f1c48813b044fc4335ed, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1830,7 +1830,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6501641678522903107}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1871,7 +1871,7 @@ GameObject:
   - component: {fileID: 8569749666228179046}
   - component: {fileID: 6501641677461319734}
   - component: {fileID: 6501641677461319733}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Agent
   m_TagString: Agent
   m_Icon: {fileID: 0}
@@ -1949,25 +1949,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   patrolIndex: 0
-  changeTargetDis: 0.5
   distance: 16
   targetPos: {x: 0, y: 0, z: 0}
   patrolMoveSpeed: 3.5
   chaseMoveSpeed: 4
   patrolTransforms:
   - {fileID: 1708741834}
-  - {fileID: 1760259012}
   - {fileID: 1224733893}
-  maxPatrolPoints: 3
+  maxPatrolPoints: 2
   patrolPositions: []
   viewRadius: 12.5
   viewAngle: 90
   targetMask:
     serializedVersion: 2
     m_Bits: 8
+  agentMask:
+    serializedVersion: 2
+    m_Bits: 128
   obstacleMask:
     serializedVersion: 2
     m_Bits: 64
+  changeTargetDis: 0.5
+  nearSupportRange: 5
+  hasBeenCalled: 0
   visionCone: {fileID: 197369561}
   attackLag: 1
   attackRadius: 2
@@ -2023,6 +2027,10 @@ MonoBehaviour:
   - key: inRangeOfPlayer
     value: 0
   - key: isPlayerDead
+    value: 0
+  - key: getSupport
+    value: 0
+  - key: closeToCallPos
     value: 0
   agentSettings: {fileID: 11400000, guid: 0494e5e8fbbb60949978f39ae4af4060, type: 2}
 --- !u!114 &8569749666228179046
@@ -2160,7 +2168,7 @@ GameObject:
   - component: {fileID: 6501641679075764472}
   - component: {fileID: 6501641679075764478}
   - component: {fileID: 6501641679075764473}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Grounded
   m_TagString: Player
   m_Icon: {fileID: 0}
