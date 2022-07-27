@@ -50,7 +50,7 @@ public class AgentController : MonoBehaviour
     GameObject player;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
 
         //Initialize the agents components
@@ -58,7 +58,7 @@ public class AgentController : MonoBehaviour
         //animationController = GetComponent<AnimationController>();
         health = GetComponent<Health>();
         agent = GetComponent<GOAPAgent>();
-        player = FindObjectOfType<PlayerController>().gameObject;
+        player = GameObject.FindGameObjectWithTag("Player").gameObject;
         audioSource = GetComponent<AudioSource>();
 
         //Set the patrol points
