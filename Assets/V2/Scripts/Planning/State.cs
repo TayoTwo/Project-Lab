@@ -3,15 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class State : IComparable<State>
 {
 
-    public string stateName;
+    public string key;
     public bool value;
 
-    public State(string n, bool v){
+    public State(string k, bool v){
 
-        stateName = n;
+        key = k;
         value = v;
 
     }
@@ -24,7 +25,7 @@ public class State : IComparable<State>
 
         }
 
-        if(other.stateName.Equals(stateName)){
+        if(other.key.Equals(key)){
 
             return 1;
 

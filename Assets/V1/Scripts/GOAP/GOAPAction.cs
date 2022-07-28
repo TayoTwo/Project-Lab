@@ -1,103 +1,103 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+// using System.Collections;
+// using System.Collections.Generic;
+// using UnityEngine;
 
-[System.Serializable]
-public class GOAPAction
-{
+// [System.Serializable]
+// public class GOAPAction
+// {
 
-    public string actionName;
-    public int cost;
-    public List<GOAPState> preConditions = new List<GOAPState>();
-    public List<GOAPState> effects = new List<GOAPState>();
+//     public string actionName;
+//     public int cost;
+//     public List<GOAPState> preConditions = new List<GOAPState>();
+//     public List<GOAPState> effects = new List<GOAPState>();
 
-    public GOAPAction(string name, List<GOAPState> pre,List<GOAPState> eff){
+//     public GOAPAction(string name, List<GOAPState> pre,List<GOAPState> eff){
 
-        actionName = name;
-        preConditions = pre;
-        effects = eff;
+//         actionName = name;
+//         preConditions = pre;
+//         effects = eff;
 
-    }
+//     }
 
 
-    public List<GOAPState> getPreConditions(){
+//     public List<GOAPState> getPreConditions(){
 
-        return preConditions;
+//         return preConditions;
 
-    }
+//     }
 
-    public List<GOAPState> getEffects(){
+//     public List<GOAPState> getEffects(){
 
-        return effects;
+//         return effects;
 
-    }
+//     }
 
     
-    public int getCost(List<GOAPState> worldState){
+//     public int getCost(List<GOAPState> worldState){
 
-        return cost;
+//         return cost;
 
-    }
+//     }
 
-    public bool isValid(GOAPAgent agent){
+//     public bool isValid(GOAPAgent agent){
 
-        bool isValid = true;
+//         bool isValid = true;
 
-        foreach(GOAPState state in getPreConditions()){
+//         foreach(GOAPState state in getPreConditions()){
 
-            if(!agent.worldState.Find(x => x.key == state.key).value.Equals(state.value)){
+//             if(!agent.worldState.Find(x => x.key == state.key).value.Equals(state.value)){
 
-                isValid = false;
+//                 isValid = false;
 
-            }
+//             }
 
-        }
+//         }
 
-        return isValid;
+//         return isValid;
         
-    }
+//     }
 
-    public bool perform(GOAPAgent agent){
+//     public bool perform(GOAPAgent agent){
 
-        AgentController agentController = agent.GetComponent<AgentController>();
+//         AgentController agentController = agent.GetComponent<AgentController>();
 
-        switch(actionName){
+//         switch(actionName){
 
-            case "Patrol":
-                agentController.Patrol();
-                break;
-            case "Chase":
-                agentController.Chase();
-                break;
-            case "Attack":
-                agentController.Attack();
-                break;
-            case "Heal":
-                agentController.FindHealthStation();
-                break;
-            case "Respond":
-                agentController.Respond();
-                break;
-            case "Call":
-                agentController.Call();
-                break;
+//             case "Patrol":
+//                 agentController.Patrol();
+//                 break;
+//             case "Chase":
+//                 agentController.Chase();
+//                 break;
+//             case "Attack":
+//                 agentController.Attack();
+//                 break;
+//             case "Heal":
+//                 agentController.FindHealthStation();
+//                 break;
+//             case "Respond":
+//                 agentController.Respond();
+//                 break;
+//             case "Call":
+//                 agentController.Call();
+//                 break;
 
-        }
+//         }
 
-        bool allConditionsMet = true;
+//         bool allConditionsMet = true;
 
-        foreach(GOAPState state in getEffects()){
+//         foreach(GOAPState state in getEffects()){
 
-            if(!agent.worldState.Find(x => x.key == state.key).value.Equals(state.value)){
+//             if(!agent.worldState.Find(x => x.key == state.key).value.Equals(state.value)){
 
-                allConditionsMet = false;
+//                 allConditionsMet = false;
 
-            }
+//             }
 
-        }
+//         }
 
-        return allConditionsMet;
+//         return allConditionsMet;
 
-    }
+//     }
 
-}
+// }

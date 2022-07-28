@@ -2,22 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Goal : MonoBehaviour
+
+[CreateAssetMenu]
+public class Goal : ScriptableObject
 {
 
     public string goalName;
     public int priority;
-    public List<State> desiredWorldState = new List<State>();
+    [SerializeField]
+    public List<State> desiredWorldState;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    public Goal (List<State> ds){
+
+        desiredWorldState = ds;
+
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public bool isValid(Agent agent){
+
+        return true;
+
     }
 }
