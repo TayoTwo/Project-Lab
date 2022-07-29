@@ -25,7 +25,7 @@ public class Action : MonoBehaviour
 
     }
 
-    public int getCost(List<State> worldState,Agent npc){
+    public virtual int getCost(List<State> worldState,Agent npc){
 
         return cost;
 

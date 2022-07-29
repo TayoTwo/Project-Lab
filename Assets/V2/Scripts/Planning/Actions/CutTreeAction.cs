@@ -7,8 +7,6 @@ using UnityEngine;
 public class CutTreeAction : Action
 {
 
-    public Vector3 treeLocation;
-
     public CutTreeAction(){
 
         List<State> p = new List<State>();
@@ -22,6 +20,35 @@ public class CutTreeAction : Action
 
     }
 
+    void UpdateClosestTree(Agent agent){
+
+        GameObject[] trees = GameObject.FindGameObjectsWithTag("Tree");
+        target = trees[0].transform;
+
+        foreach(GameObject tree in trees){
+
+            int disA = agent.pathFinder.CalculateCost(agent.transform.position,target.position);
+            int disB = agent.pathFinder.CalculateCost(agent.transform.position,tree.transform.position);
+
+
+            if(disB > disA){
+
+                target = tree.transform;
+
+            }
+
+        }
+
+    }
+
+    public override int getCost(List<State> worldState,Agent agent){
+
+        UpdateClosestTree(agent);
+        
+        return agent.pathFinder.CalculateCost(agent.transform.position,target.position);
+
+    }
+
     public override bool perform(Agent agent){
 
         //Perform action
@@ -29,6 +56,13 @@ public class CutTreeAction : Action
         //Set tree as target
         //Destroy tree
         //Add resource to inventory
+
+        if(agent.isWithinRange(target.position)){
+
+            Destroy(target.gameObject);
+            agent.worldState.Find(x => x.key == "hasWood").SetValue(true);
+
+        }
 
         bool allConditionsMet = true;
 

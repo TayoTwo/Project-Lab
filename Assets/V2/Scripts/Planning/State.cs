@@ -17,6 +17,18 @@ public class State : IComparable<State>
 
     }
 
+    public void SetValue(bool v){
+
+        value = v;
+        
+    }
+
+    public bool GetValue(Agent agent){
+
+        return value;
+
+    }
+
     public int CompareTo(State other){
 
         if(other == null){

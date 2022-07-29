@@ -58,14 +58,23 @@ public class ActionPlanner : MonoBehaviour
 
         }
 
+        Debug.Log(agent.worldState);
+        Debug.Log(agent);
+
         //Loop through every branch in the tree and add its actions to the plan
         foreach(TreeNode<PlanStep> branch in tree.children){
 
+            //Debug.Log(tree.children.Count);
+
             foreach(Plan childPlan in treeToPlan(branch)){
 
-                childPlan.AddToPlan(tree.value.action,tree.value.action.getCost(agent.worldState,agent));
-                plans.Add(childPlan);
+                if(tree.value.action != null){
 
+                    childPlan.AddToPlan(tree.value.action,tree.value.action.getCost(agent.worldState,agent));
+
+                }
+
+                plans.Add(childPlan);
 
             }
 

@@ -23,7 +23,7 @@ public class Plan {
     public void AddToPlan(Action action,int c){
 
         actions.Add(action);
-        cost = c;
+        cost += c;
 
     }
 
