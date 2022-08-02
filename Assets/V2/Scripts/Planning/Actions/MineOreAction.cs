@@ -45,6 +45,19 @@ public class MineOreAction : Action
         return agent.pathFinder.CalculateCost(agent.transform.position,target.position);
 
     }
+    IEnumerator MineOre(Agent agent){
+
+
+        if(agent.isWithinRange(target.position)){
+
+            Destroy(target.root.gameObject);
+            agent.backpack.ore++;
+
+        }
+
+        yield return new WaitForSeconds(1.433f);
+
+    }
 
     public override bool perform(Agent agent){
 
@@ -54,12 +67,7 @@ public class MineOreAction : Action
         //Destroy tree
         //Add resource to inventory
 
-        if(agent.isWithinRange(target.position)){
-
-            Destroy(target.gameObject);
-            agent.worldState.Find(x => x.key == "hasOre").SetValue(true);
-
-        }
+        StartCoroutine(MineOre(agent));
 
         bool allConditionsMet = true;
 

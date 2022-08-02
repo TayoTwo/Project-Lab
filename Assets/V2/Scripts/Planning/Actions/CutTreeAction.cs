@@ -11,6 +11,7 @@ public class CutTreeAction : Action
 
         List<State> p = new List<State>();
         List<State> e = new List<State>();
+        needsInRange = true;
         e.Add(new State("hasWood",true));
 
         actionName = "CutTree";
@@ -48,6 +49,19 @@ public class CutTreeAction : Action
 
     }
 
+    IEnumerator CutTree(Agent agent){
+
+        if(agent.isWithinRange(target.position)){
+
+            Destroy(target.root.gameObject);
+            agent.backpack.wood++;
+
+        }
+
+        yield return new WaitForSeconds(1.433f);
+
+    }
+
     public override bool perform(Agent agent){
 
         //Perform action
@@ -56,12 +70,7 @@ public class CutTreeAction : Action
         //Destroy tree
         //Add resource to inventory
 
-        if(agent.isWithinRange(target.position)){
-
-            Destroy(target.gameObject);
-            agent.worldState.Find(x => x.key == "hasWood").SetValue(true);
-
-        }
+        StartCoroutine(CutTree(agent));
 
         bool allConditionsMet = true;
 

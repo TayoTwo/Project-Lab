@@ -12,8 +12,9 @@ public class Goal : ScriptableObject
     [SerializeField]
     public List<State> desiredWorldState;
 
-    public Goal (List<State> ds){
+    public Goal (string name,List<State> ds){
 
+        goalName = name;
         desiredWorldState = ds;
 
     }

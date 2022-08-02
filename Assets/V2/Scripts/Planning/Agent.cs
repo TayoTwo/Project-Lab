@@ -7,7 +7,8 @@ public enum AgentState {
 
     IDLE,
     MOVETO,
-    PERFORM
+    PERFORM,
+    SIGNAL
 
 }
 
@@ -30,8 +31,10 @@ public class Agent : MonoBehaviour
     public List<Goal> goals;
     public List<Action> actions = new List<Action>();
     public PathFinder pathFinder;
+    public Backpack backpack;
     ActionPlanner actionPlanner;
     NavMeshAgent navMeshAgent;
+    AnimationController animationController;
     Goal highestPriorityGoal;
 
     void Awake(){
@@ -39,6 +42,8 @@ public class Agent : MonoBehaviour
         pathFinder = FindObjectOfType<PathFinder>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         actionPlanner = GetComponent<ActionPlanner>();
+        animationController = GetComponent<AnimationController>();
+        backpack = GetComponent<Backpack>();
 
         //Set actions by looking through components
         //Set goals
@@ -73,17 +78,33 @@ public class Agent : MonoBehaviour
 
             case AgentState.IDLE:
 
+                animationController.moving = false;
+                animationController.interacting = false;
+                animationController.signaling = false;
                 IdleState();
                 break;
 
             case AgentState.MOVETO:
 
+                animationController.moving = true;
+                animationController.interacting = false;
+                animationController.signaling = false;
                 MoveToState();
                 break;
             
             case AgentState.PERFORM:
 
+                animationController.moving = false;
+                animationController.interacting = true;
+                animationController.signaling = false;
                 PerformActionState();
+                break;
+            case AgentState.SIGNAL:
+
+                animationController.moving = false;
+                animationController.interacting = false;
+                animationController.signaling = true;
+                SignalState();
                 break;
 
         }
@@ -95,27 +116,32 @@ public class Agent : MonoBehaviour
 
         navMeshAgent.SetDestination(transform.position);
         plan = actionPlanner.FindBestPlan(currentGoal);
-        currentPlanStep = 0;
-        currentAction = plan.actions[currentPlanStep];
-        currentActionName = plan.actions[currentPlanStep].actionName;
 
-        if(plan != null && !currentAction.needsRangeCheck()){
+        if(plan != null){
 
-            agentState = AgentState.PERFORM;
-            return;
+            currentPlanStep = 0;
+            currentAction = plan.actions[currentPlanStep];
+            currentActionName = plan.actions[currentPlanStep].actionName;
 
-        } else if(plan != null && currentAction.needsRangeCheck()){
+            if(!currentAction.needsRangeCheck()){
 
-            agentState = AgentState.MOVETO;
-            return;
+                agentState = AgentState.PERFORM;
+                return;
 
-        } else if(plan == null){
+            } else {
 
-            //REQUEST FOR OTHER AGENTS TO FILL REQUEST
-            //ASKS AGENTS THAT CAN RESPOND TO REQUEST TO CHANGE THEIR GOAL TO 'RespondToRequest'
-            //THIS IS COMPLETED BY COMPLETING AS MANY OF THE ASKERS WORLD STATE
+                agentState = AgentState.MOVETO;
+                return;
+
+            }
+
+        } else {
+
+            agentState = AgentState.SIGNAL;
 
         }
+
+
 
     }
 
@@ -167,6 +193,99 @@ public class Agent : MonoBehaviour
 
         }
 
+    }
+
+    void SignalState(){
+
+        Debug.Log("SIGNALING FOR HELP");
+        List<State> statesToComplete = new List<State>(currentGoal.desiredWorldState);
+        
+        //Loop through the possible actions and check if their effects would get us to our desired world state
+        foreach(Action action in actions){
+
+            List<State> effects = action.getEffects();
+            //If the action's effects match our desired world state then remove it to check what else needs to be satisfied
+            //We also mark the current action as needed in the plan
+            foreach(State state in statesToComplete.ToArray()){
+
+                if(!effects.Exists(x => x.key == state.key)) continue;
+
+                if(effects.Find(x => x.key == state.key).value.Equals(state.value)){
+
+                    statesToComplete.Remove(state);
+
+                }
+ 
+            }   
+
+        }
+
+        GameObject[] agents = GameObject.FindGameObjectsWithTag("Agent");
+
+        foreach(GameObject a in agents){
+
+            Agent agentComp = a.GetComponent<Agent>();
+
+            statesToComplete = agentComp.RespondToSignal(statesToComplete,this);
+
+            if(statesToComplete.Count == 0){
+
+                return;
+
+            }
+
+
+        }
+
+        //REQUEST FOR OTHER AGENTS TO FILL REQUEST
+        //ASKS AGENTS THAT CAN RESPOND TO REQUEST TO CHANGE THEIR GOAL TO 'RespondToRequest'
+        //THIS IS COMPLETED BY COMPLETING AS MANY OF THE ASKERS WORLD STATE
+
+    }
+
+    public List<State> RespondToSignal(List<State> statesToComplete, Agent caller){
+
+        bool canHelp = false;
+        List<State> statesLeft = new List<State>(statesToComplete);
+        List<State> toDoList = new List<State>();
+
+        //Loop through the possible actions and check if their effects would get us to our desired world state
+        foreach(Action action in actions){
+
+            List<State> effects = action.getEffects();
+
+            //If the action's effects match our desired world state then remove it to check what else needs to be satisfied
+            //We also mark the current action as needed in the plan
+            foreach(State state in statesToComplete.ToArray()){
+
+                if(!effects.Exists(x => x.key == state.key)) continue;
+
+                if(effects.Find(x => x.key == state.key).value.Equals(state.value)){
+
+                    toDoList.Add(state);
+                    statesLeft.Remove(state);
+                    canHelp = true;
+
+                }
+ 
+            } 
+
+        }
+
+        Debug.Log(canHelp);
+
+        toDoList.Add(new State("hasHelped",true)); 
+
+        if(canHelp){
+
+            currentGoal = goals.Find(x => x.goalName == "Help");
+            currentAction = GetComponent<GiveAction>();
+            currentAction.preCons = toDoList;
+            currentAction.target = caller.transform;
+
+        }
+
+        return statesLeft;
     }
 
     public bool isWithinRange(Vector3 targetPos){
