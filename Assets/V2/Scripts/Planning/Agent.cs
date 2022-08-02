@@ -109,6 +109,12 @@ public class Agent : MonoBehaviour
             agentState = AgentState.MOVETO;
             return;
 
+        } else if(plan == null){
+
+            //REQUEST FOR OTHER AGENTS TO FILL REQUEST
+            //ASKS AGENTS THAT CAN RESPOND TO REQUEST TO CHANGE THEIR GOAL TO 'RespondToRequest'
+            //THIS IS COMPLETED BY COMPLETING AS MANY OF THE ASKERS WORLD STATE
+
         }
 
     }
@@ -165,7 +171,7 @@ public class Agent : MonoBehaviour
 
     public bool isWithinRange(Vector3 targetPos){
 
-        Debug.Log(Vector3.Distance(transform.position,targetPos));
+        //Debug.Log(Vector3.Distance(transform.position,targetPos));
 
         if(Vector3.Distance(transform.position,targetPos) < closeToTargetDis){
 

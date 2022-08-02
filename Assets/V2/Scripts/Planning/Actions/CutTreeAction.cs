@@ -10,7 +10,6 @@ public class CutTreeAction : Action
     public CutTreeAction(){
 
         List<State> p = new List<State>();
-        p.Add(new State("inRange",true));
         List<State> e = new List<State>();
         e.Add(new State("hasWood",true));
 
