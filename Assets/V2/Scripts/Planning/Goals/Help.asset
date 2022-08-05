@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbc974a717ab7034eae267bf79cbdfd3, type: 3}
   m_Name: Help
   m_EditorClassIdentifier: 
-  goalName: 
+  goalName: Help
   priority: 2
   desiredWorldState:
   - key: hasHelped

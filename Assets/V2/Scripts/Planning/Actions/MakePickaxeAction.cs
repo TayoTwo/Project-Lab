@@ -13,7 +13,7 @@ public class MakePickaxeAction : Action
         p.Add(new State("hasWood",true));
         p.Add(new State("hasOre",true));
         List<State> e = new List<State>();
-        e.Add(new State("haxPickaxe",true));
+        e.Add(new State("hasPickaxe",true));
 
         actionName = "MakePickaxe";
         preCons = p;

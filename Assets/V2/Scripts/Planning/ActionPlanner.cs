@@ -113,7 +113,7 @@ public class ActionPlanner : MonoBehaviour
         //If the desired world state has any states in common with the current world state then remove it
         foreach(State state in desiredWorldState.ToArray()){
 
-            Debug.Log(state.key);
+            //Debug.Log(state.key);
             if(agent.worldState.Find(x => x.key == state.key).value.Equals(state.value)){
 
                 //Debug.Log("STATE ALREADY SATISFIED");

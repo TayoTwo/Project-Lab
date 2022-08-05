@@ -115,9 +115,18 @@ public class Agent : MonoBehaviour
     void IdleState(){
 
         navMeshAgent.SetDestination(transform.position);
-        plan = actionPlanner.FindBestPlan(currentGoal);
 
-        if(plan != null){
+        if(currentGoal != null){
+
+            plan = actionPlanner.FindBestPlan(currentGoal);
+
+        } else {
+
+            return;
+
+        }
+
+        if(plan != null && plan.actions.Count != 0){
 
             currentPlanStep = 0;
             currentAction = plan.actions[currentPlanStep];
@@ -138,6 +147,7 @@ public class Agent : MonoBehaviour
         } else {
 
             agentState = AgentState.SIGNAL;
+            Debug.Log("SIGNALING FOR HELP");
 
         }
 
@@ -194,10 +204,8 @@ public class Agent : MonoBehaviour
         }
 
     }
-
     void SignalState(){
 
-        Debug.Log("SIGNALING FOR HELP");
         List<State> statesToComplete = new List<State>(currentGoal.desiredWorldState);
         
         //Loop through the possible actions and check if their effects would get us to our desired world state
@@ -210,9 +218,18 @@ public class Agent : MonoBehaviour
 
                 if(!effects.Exists(x => x.key == state.key)) continue;
 
-                if(effects.Find(x => x.key == state.key).value.Equals(state.value)){
+                if(effects.Exists(x => x.key == state.key) && effects.Find(x => x.key == state.key).value.Equals(state.value)){
 
+                    //Debug.Log("HELLO");
                     statesToComplete.Remove(state);
+                    List<State> preCons = action.getPrecons();
+
+                    foreach(State s in preCons){
+
+                        //Debug.Log(state.key + "-" + state.value);
+                        statesToComplete.Add(s);
+
+                    }
 
                 }
  
@@ -224,12 +241,15 @@ public class Agent : MonoBehaviour
 
         foreach(GameObject a in agents){
 
+            if(a == gameObject) continue;
+
             Agent agentComp = a.GetComponent<Agent>();
 
             statesToComplete = agentComp.RespondToSignal(statesToComplete,this);
 
             if(statesToComplete.Count == 0){
 
+                agentState = AgentState.IDLE;
                 return;
 
             }
@@ -253,11 +273,13 @@ public class Agent : MonoBehaviour
         foreach(Action action in actions){
 
             List<State> effects = action.getEffects();
+            //Debug.Log(action.actionName + ":" + effects.Count);
 
             //If the action's effects match our desired world state then remove it to check what else needs to be satisfied
             //We also mark the current action as needed in the plan
             foreach(State state in statesToComplete.ToArray()){
 
+                //Debug.Log(state.key + "-" + state.value);
                 if(!effects.Exists(x => x.key == state.key)) continue;
 
                 if(effects.Find(x => x.key == state.key).value.Equals(state.value)){
@@ -272,16 +294,18 @@ public class Agent : MonoBehaviour
 
         }
 
-        Debug.Log(canHelp);
-
-        toDoList.Add(new State("hasHelped",true)); 
+        //Debug.Log(canHelp + " " + gameObject.name);
 
         if(canHelp){
 
-            currentGoal = goals.Find(x => x.goalName == "Help");
+            //Change the responders goal and create a new plan
             currentAction = GetComponent<GiveAction>();
             currentAction.preCons = toDoList;
             currentAction.target = caller.transform;
+
+            currentGoal = goals.Find(x => x.goalName == "Help");
+
+            agentState = AgentState.IDLE;
 
         }
 

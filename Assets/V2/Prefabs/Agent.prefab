@@ -649,7 +649,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7971280396120404104}
   m_LocalRotation: {x: 0.36333993, y: 0.36334017, z: -0.60661685, w: 0.60661685}
-  m_LocalPosition: {x: 3.5527137e-15, y: 0.5509222, z: 0.000000014901172}
+  m_LocalPosition: {x: -0.24999978, y: 0.5509222, z: 0.00000023841858}
   m_LocalScale: {x: 0.99999994, y: 1, z: 0.99999994}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -767,13 +767,14 @@ GameObject:
   - component: {fileID: 8346689979097621838}
   - component: {fileID: 8346689979097621808}
   - component: {fileID: 8346689979097621811}
+  - component: {fileID: 568069354}
   m_Layer: 0
   m_Name: Agent
-  m_TagString: Untagged
+  m_TagString: Agent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8346689979097621836
 Transform:
   m_ObjectHideFlags: 0
@@ -824,6 +825,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69bd10c67b1fa7a47b32bf99d389d981, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wood: 0
+  ore: 0
+  tool: {fileID: 0}
+  handSlot: {fileID: 0}
 --- !u!114 &8346689979097621838
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -842,13 +847,25 @@ MonoBehaviour:
     actions: []
     cost: 0
   currentPlanStep: 0
-  currentGoal: {fileID: 0}
+  currentGoal: {fileID: 11400000, guid: ee689a0dfcff00c48bb8bf99ed05c9a4, type: 2}
   currentAction: {fileID: 0}
   currentActionName: 
-  worldState: []
-  goals: []
+  worldState:
+  - key: hasWood
+    value: 0
+  - key: hasOre
+    value: 0
+  - key: hasPickaxe
+    value: 0
+  - key: hasHelped
+    value: 0
+  goals:
+  - {fileID: 11400000, guid: f427e914f43c0e34299ea8250b58c1b2, type: 2}
+  - {fileID: 11400000, guid: 892be020ce62c78459c2ae968a44404d, type: 2}
+  - {fileID: 11400000, guid: ee689a0dfcff00c48bb8bf99ed05c9a4, type: 2}
   actions: []
   pathFinder: {fileID: 0}
+  backpack: {fileID: 0}
 --- !u!114 &8346689979097621808
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -878,6 +895,26 @@ MonoBehaviour:
   moving: 0
   interacting: 0
   signaling: 0
+--- !u!114 &568069354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8346689979097621835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0554bb21b93c3f543889935dc81fec57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actionName: Give
+  cost: 0
+  target: {fileID: 0}
+  needsInRange: 1
+  preCons: []
+  effects:
+  - key: hasHelped
+    value: 1
 --- !u!1 &8346689980048352326
 GameObject:
   m_ObjectHideFlags: 0
