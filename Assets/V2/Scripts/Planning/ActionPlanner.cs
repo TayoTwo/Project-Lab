@@ -66,9 +66,11 @@ public class ActionPlanner : MonoBehaviour
 
             //Debug.Log(tree.children.Count);
 
-            foreach(Plan childPlan in treeToPlan(branch)){
+            List<Plan> branchPlan = treeToPlan(branch);
 
-                if(tree.value.action != null){
+            foreach(Plan childPlan in branchPlan){
+
+                if(tree.value.action != null && !childPlan.actions.Exists(x => x.actionName == tree.value.action.actionName)){
 
                     childPlan.AddToPlan(tree.value.action,tree.value.action.getCost(agent.worldState,agent));
 
@@ -157,14 +159,17 @@ public class ActionPlanner : MonoBehaviour
                 }
 
                 //Debug.Log("Action " + action.actionName + " is valid");
-
+                
+                //We run this function recursively to check what other actions we need before we can complete this desired world state
                 (TreeNode<PlanStep> branch, bool branchHasSolution) = BuidPlanTree(
                     new TreeNode<PlanStep>(
                         new PlanStep(action,
                         new List<State>(tempDesiredWorldState))));
 
+                //If the 'ToDoList' is empty then we have a valid solution
                 if(tempDesiredWorldState.Count == 0 || branchHasSolution){
 
+                    //Add this branch as a possible solution to the end of the tree
                     //Debug.Log("Adding to tree " + action.actionName);
                     stepTree.children.AddLast(branch);   
                     hasSolution = true;
@@ -175,6 +180,7 @@ public class ActionPlanner : MonoBehaviour
 
         }
 
+        //Return with all our possible plans of action
         return (stepTree,hasSolution);
 
     }
