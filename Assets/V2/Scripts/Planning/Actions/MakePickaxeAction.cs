@@ -23,18 +23,18 @@ public class MakePickaxeAction : Action
 
     void UpdateClosestWorkBench(Agent agent){
 
-        GameObject[] trees = GameObject.FindGameObjectsWithTag("Workbench");
-        target = trees[0].transform;
+        GameObject[] benches = GameObject.FindGameObjectsWithTag("Workbench");
+        target = benches[0].transform;
 
-        foreach(GameObject tree in trees){
+        foreach(GameObject bench in benches){
 
             int disA = agent.pathFinder.CalculateCost(agent.transform.position,target.position);
-            int disB = agent.pathFinder.CalculateCost(agent.transform.position,tree.transform.position);
+            int disB = agent.pathFinder.CalculateCost(agent.transform.position,bench.transform.position);
 
 
             if(disB > disA){
 
-                target = tree.transform;
+                target = bench.transform;
 
             }
 
@@ -51,6 +51,10 @@ public class MakePickaxeAction : Action
     }
 
     IEnumerator MakePickaxe(Agent agent){
+
+        UpdateClosestWorkBench(agent);
+
+        if(target == null) yield break;
 
         if(agent.isWithinRange(target.position)){
 

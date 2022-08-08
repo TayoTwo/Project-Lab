@@ -114,7 +114,9 @@ public class Agent : MonoBehaviour
     //Essentially the plan maker
     void IdleState(){
 
-        navMeshAgent.SetDestination(transform.position);
+        //Debug.Log(gameObject.name + " IDLING");
+
+        navMeshAgent.isStopped = true;
 
         if(currentGoal != null){
 
@@ -147,7 +149,7 @@ public class Agent : MonoBehaviour
         } else {
 
             agentState = AgentState.SIGNAL;
-            Debug.Log("SIGNALING FOR HELP");
+            return;
 
         }
 
@@ -157,6 +159,11 @@ public class Agent : MonoBehaviour
 
     //Move to the actions location
     void MoveToState(){
+
+        Debug.Log("MOVING");
+
+        navMeshAgent.isStopped = false;
+        navMeshAgent.SetDestination(currentAction.target.position);
 
         if(currentAction.needsRangeCheck() && currentAction.target == null){
 
@@ -175,18 +182,27 @@ public class Agent : MonoBehaviour
         }
 
         //NavMesh move too
-        navMeshAgent.SetDestination(currentAction.target.position);
 
     }
 
     //Perform the action
     void PerformActionState(){
 
+        navMeshAgent.isStopped = true;
+
         if(plan == null){
 
             agentState = AgentState.IDLE;
+            return;
 
         }
+
+        // if(currentAction.needsRangeCheck() && currentAction.target != null && !isWithinRange(currentAction.target.position)){
+
+        //     agentState = AgentState.MOVETO;
+        //     return;
+
+        // }
 
         //Until the action has been complete continue to do it
         bool stepComplete = currentAction.perform(this);
@@ -196,15 +212,20 @@ public class Agent : MonoBehaviour
 
             currentPlanStep++;
             currentAction = plan.actions[currentPlanStep];
+            agentState = AgentState.MOVETO;
 
         } else if(currentPlanStep >= plan.actions.Count - 1){
 
+            currentGoal = null;
+            currentAction = null;
             agentState = AgentState.IDLE;
 
         }
 
     }
     void SignalState(){
+
+        Debug.Log("SIGNALING");
 
         List<State> statesToComplete = new List<State>(currentGoal.desiredWorldState);
         
@@ -242,18 +263,30 @@ public class Agent : MonoBehaviour
         foreach(GameObject a in agents){
 
             if(a == gameObject) continue;
+            if(a.GetComponent<Agent>().currentGoal != null) continue;
 
             Agent agentComp = a.GetComponent<Agent>();
 
             statesToComplete = agentComp.RespondToSignal(statesToComplete,this);
 
-            if(statesToComplete.Count == 0){
+        }
 
-                agentState = AgentState.IDLE;
-                return;
+        foreach(State state in statesToComplete.ToArray()){
+
+            if(worldState.Find(x => x.key == state.key).value.Equals(state.value)){
+
+                statesToComplete.Remove(state);
 
             }
 
+        }
+
+        Debug.Log("STATES TO COMPLETE " + gameObject.name + " " + statesToComplete.Count);
+        
+        if(statesToComplete.Count == 0){
+
+            agentState = AgentState.IDLE;
+            return;
 
         }
 

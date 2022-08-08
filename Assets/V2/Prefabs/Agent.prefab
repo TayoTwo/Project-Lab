@@ -842,7 +842,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agentState: 0
-  closeToTargetDis: 0.1
+  closeToTargetDis: 1
   plan:
     actions: []
     cost: 0

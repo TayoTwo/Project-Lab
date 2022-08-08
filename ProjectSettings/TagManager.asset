@@ -8,6 +8,8 @@ TagManager:
   - EndKey
   - Tree
   - Ore
+  - Enemy
+  - Workbench
   layers:
   - Default
   - TransparentFX

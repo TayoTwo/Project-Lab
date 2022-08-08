@@ -25,17 +25,19 @@ public class GiveAction : Action
 
             foreach(State state in preCons){
 
-                if(state.key == "hasWood"){
+                if(state.key == "hasWood"  && agent.backpack.wood > 0){
 
                     agent.backpack.wood--;
                     reciever.wood++;
+                    agent.worldState.Find(x => x.key == "hasHelped").SetValue(true);
 
                 }
 
-                if(state.key == "hasOre"){
+                if(state.key == "hasOre" && agent.backpack.ore > 0){
 
                     agent.backpack.ore--;
                     reciever.ore++;
+                    agent.worldState.Find(x => x.key == "hasHelped").SetValue(true);
 
                 }
 
@@ -70,6 +72,12 @@ public class GiveAction : Action
                 allConditionsMet = false;
 
             }
+
+        }
+
+        if(allConditionsMet){
+
+            agent.worldState.Find(x => x.key == "hasHelped").SetValue(true);
 
         }
 

@@ -19,18 +19,18 @@ public class MineOreAction : Action
 
     void UpdateClosestOre(Agent agent){
 
-        GameObject[] trees = GameObject.FindGameObjectsWithTag("Ore");
-        target = trees[0].transform;
+        GameObject[] ores = GameObject.FindGameObjectsWithTag("Ore");
+        if(ores.Length == 0) return;
+        target = ores[0].transform;
 
-        foreach(GameObject tree in trees){
+        foreach(GameObject ore in ores){
 
             int disA = agent.pathFinder.CalculateCost(agent.transform.position,target.position);
-            int disB = agent.pathFinder.CalculateCost(agent.transform.position,tree.transform.position);
-
+            int disB = agent.pathFinder.CalculateCost(agent.transform.position,ore.transform.position);
 
             if(disB > disA){
 
-                target = tree.transform;
+                target = ore.transform;
 
             }
 
@@ -46,7 +46,10 @@ public class MineOreAction : Action
 
     }
     IEnumerator MineOre(Agent agent){
+        
+        UpdateClosestOre(agent);
 
+        if(target == null) yield break;
 
         if(agent.isWithinRange(target.position)){
 

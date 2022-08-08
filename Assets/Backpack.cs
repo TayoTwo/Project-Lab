@@ -45,6 +45,12 @@ public class Backpack : MonoBehaviour
             tool.transform.localPosition = Vector3.zero;
             tool.transform.localEulerAngles = new Vector3(0,90f,0);
 
+            if(tool.name.Contains("Pickaxe")){
+
+                agent.worldState.Find(x => x.key == "hasPickaxe").SetValue(true);
+
+            }
+
         }
 
     }

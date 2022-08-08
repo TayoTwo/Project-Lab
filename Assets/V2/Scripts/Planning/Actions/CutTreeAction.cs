@@ -23,6 +23,7 @@ public class CutTreeAction : Action
     void UpdateClosestTree(Agent agent){
 
         GameObject[] trees = GameObject.FindGameObjectsWithTag("Tree");
+        if(trees.Length == 0) return;
         target = trees[0].transform;
 
         foreach(GameObject tree in trees){
@@ -31,7 +32,7 @@ public class CutTreeAction : Action
             int disB = agent.pathFinder.CalculateCost(agent.transform.position,tree.transform.position);
 
 
-            if(disB > disA){
+            if(disB < disA){
 
                 target = tree.transform;
 
@@ -51,8 +52,17 @@ public class CutTreeAction : Action
 
     IEnumerator CutTree(Agent agent){
 
+        //Debug.Log("CUTTING");
+
+        UpdateClosestTree(agent);
+
+        if(target == null) yield break;
+
+        //Debug.Log("YUP " + agent.isWithinRange(target.position));
+
         if(agent.isWithinRange(target.position)){
 
+            //Debug.Log("DESTROYING");
             Destroy(target.root.gameObject);
             agent.backpack.wood++;
 

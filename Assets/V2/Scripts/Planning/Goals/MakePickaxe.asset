@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbc974a717ab7034eae267bf79cbdfd3, type: 3}
   m_Name: MakePickaxe
   m_EditorClassIdentifier: 
-  goalName: 
-  priority: 0
+  goalName: MakePickaxe
+  priority: 1
   desiredWorldState:
   - key: hasPickaxe
     value: 1
