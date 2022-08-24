@@ -211,29 +211,29 @@ public class PathFinder : MonoBehaviour{
 
     void OnDrawGizmos(){
 
-        //Draw a cube showing the pathfinding space
-        Gizmos.DrawWireCube(transform.position,new Vector3(gridDim.x,1,gridDim.y) * unitLength);
+        // //Draw a cube showing the pathfinding space
+        // Gizmos.DrawWireCube(transform.position,new Vector3(gridDim.x,1,gridDim.y) * unitLength);
 
-        if(grid != null){
+        // if(grid != null){
 
-            //Look through every cell and visually show if it is walkable or not
-            foreach(Cell cell in grid){
+        //     //Look through every cell and visually show if it is walkable or not
+        //     foreach(Cell cell in grid){
 
-                if(cell.walkable){
+        //         if(cell.walkable){
 
-                    Gizmos.color = Color.green;
+        //             Gizmos.color = Color.green;
 
-                } else {
+        //         } else {
 
-                    Gizmos.color = Color.red;
+        //             Gizmos.color = Color.red;
 
-                }
+        //         }
 
-                Gizmos.DrawCube(cell.pos,Vector3.one * unitLength * 0.9f);
+        //         Gizmos.DrawCube(cell.pos,Vector3.one * unitLength * 0.9f);
 
-            }
+        //     }
 
-        }
+        // }
 
     }
 

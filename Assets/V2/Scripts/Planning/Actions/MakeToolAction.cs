@@ -2,20 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MakePickaxeAction : Action
+public class MakeToolAction : Action
 {
 
     public GameObject pickaxe;
 
-    public MakePickaxeAction(){
+    public MakeToolAction(){
 
         List<State> p = new List<State>();
         p.Add(new State("hasWood",true));
         p.Add(new State("hasOre",true));
+        needsInRange = true;
         List<State> e = new List<State>();
-        e.Add(new State("hasPickaxe",true));
+        e.Add(new State("hasTool",true));
 
-        actionName = "MakePickaxe";
+        actionName = "MakeTool";
         preCons = p;
         effects = e;
 
@@ -50,7 +51,7 @@ public class MakePickaxeAction : Action
 
     }
 
-    IEnumerator MakePickaxe(Agent agent){
+    IEnumerator MakeTool(Agent agent){
 
         UpdateClosestWorkBench(agent);
 
@@ -77,7 +78,7 @@ public class MakePickaxeAction : Action
         //Destroy tree
         //Add resource to inventory
 
-        StartCoroutine(MakePickaxe(agent));
+        StartCoroutine(MakeTool(agent));
 
         bool allConditionsMet = true;
 

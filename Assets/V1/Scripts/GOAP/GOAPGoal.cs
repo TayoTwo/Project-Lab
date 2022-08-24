@@ -1,50 +1,50 @@
-// using System.Collections;
-// using System.Collections.Generic;
-// using UnityEngine;
-// using UnityEngine.Events;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Events;
 
-// [System.Serializable]
-// public class GOAPGoal {
+[System.Serializable]
+public class GOAPGoal {
 
-//     public string goalName;
-//     public int priority;
-//     public List<GOAPState> desiredWorldState = new List<GOAPState>();
+    public string goalName;
+    public int priority;
+    public List<GOAPState> desiredWorldState = new List<GOAPState>();
 
-//     public GOAPGoal (List<GOAPState> ds){
+    public GOAPGoal (List<GOAPState> ds){
 
-//         desiredWorldState = ds;
+        desiredWorldState = ds;
 
-//     }
+    }
 
-//     public bool isValid(GOAPAgent agent){
+    public bool isValid(GOAPAgent agent){
 
-//         AgentController agentController = agent.GetComponent<AgentController>();
+        AgentController agentController = agent.GetComponent<AgentController>();
 
-//         switch(goalName){
+        switch(goalName){
 
-//             case "KillPlayer":
+            case "KillPlayer":
 
-//                 return !agent.worldState.Find(x => x.key == "isPlayerDead").GetValue(agent);
+                return !agent.worldState.Find(x => x.key == "isPlayerDead").GetValue(agent);
 
-//             case "GetSupport":
+            case "GetSupport":
 
-//                 if(agentController.AgentCount() > 1){
+                if(agentController.AgentCount() > 1){
 
-//                     return !agentController.health.isHealthy;
+                    return !agentController.health.isHealthy;
 
-//                 }
+                }
 
-//                 return false;
+                return false;
 
-//             case "Respond":
+            case "Respond":
 
-//                 return agentController.hasBeenCalled;
+                return agentController.hasBeenCalled;
 
-//             default:
-//                 return false;
+            default:
+                return false;
 
-//         }
+        }
 
-//     }
+    }
 
-// }
+}

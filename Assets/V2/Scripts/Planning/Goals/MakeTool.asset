@@ -10,12 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cbc974a717ab7034eae267bf79cbdfd3, type: 3}
-  m_Name: MineOre
+  m_Name: MakeTool
   m_EditorClassIdentifier: 
-  goalName: MineOre
+  goalName: MakeTool
   priority: 0
   desiredWorldState:
-  - key: hasOre
-    value: 1
-  - key: oreMined
+  - key: hasTool
     value: 1

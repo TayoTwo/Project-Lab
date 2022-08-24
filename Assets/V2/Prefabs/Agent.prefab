@@ -768,6 +768,7 @@ GameObject:
   - component: {fileID: 8346689979097621808}
   - component: {fileID: 8346689979097621811}
   - component: {fileID: 568069354}
+  - component: {fileID: 1354948553}
   m_Layer: 0
   m_Name: Agent
   m_TagString: Agent
@@ -842,7 +843,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agentState: 0
-  closeToTargetDis: 1
+  closeToTargetDis: 2
   plan:
     actions: []
     cost: 0
@@ -855,13 +856,22 @@ MonoBehaviour:
     value: 0
   - key: hasOre
     value: 0
-  - key: hasPickaxe
+  - key: hasTool
     value: 0
   - key: hasHelped
     value: 0
+  - key: hasMovedTo
+    value: 0
+  - key: treeChopped
+    value: 0
+  - key: oreMined
+    value: 0
   goals:
   - {fileID: 11400000, guid: f427e914f43c0e34299ea8250b58c1b2, type: 2}
+  - {fileID: 11400000, guid: 36f8009c94d512646822b78ca8beed94, type: 2}
+  - {fileID: 11400000, guid: f427e914f43c0e34299ea8250b58c1b2, type: 2}
   - {fileID: 11400000, guid: 892be020ce62c78459c2ae968a44404d, type: 2}
+  - {fileID: 11400000, guid: 8251be03ff0971641969d59537579015, type: 2}
   - {fileID: 11400000, guid: ee689a0dfcff00c48bb8bf99ed05c9a4, type: 2}
   actions: []
   pathFinder: {fileID: 0}
@@ -915,6 +925,27 @@ MonoBehaviour:
   effects:
   - key: hasHelped
     value: 1
+--- !u!114 &1354948553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8346689979097621835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a63c8e3418f70b43928009fd83563a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actionName: MoveTo
+  cost: 0
+  target: {fileID: 0}
+  needsInRange: 1
+  preCons: []
+  effects:
+  - key: hasMovedTo
+    value: 1
+  moveToPos: {x: 0, y: 0, z: 0}
 --- !u!1 &8346689980048352326
 GameObject:
   m_ObjectHideFlags: 0
