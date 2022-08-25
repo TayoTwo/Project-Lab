@@ -40,7 +40,7 @@ PrefabInstance:
     - target: {fileID: 8346689979097621836, guid: d1e0d30410766ca43a3d2976a49754c5,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8346689979097621836, guid: d1e0d30410766ca43a3d2976a49754c5,
         type: 3}
@@ -50,7 +50,7 @@ PrefabInstance:
     - target: {fileID: 8346689979097621836, guid: d1e0d30410766ca43a3d2976a49754c5,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8346689979097621836, guid: d1e0d30410766ca43a3d2976a49754c5,
         type: 3}
@@ -65,7 +65,7 @@ PrefabInstance:
     - target: {fileID: 8346689979097621836, guid: d1e0d30410766ca43a3d2976a49754c5,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 8346689979097621836, guid: d1e0d30410766ca43a3d2976a49754c5,
         type: 3}
@@ -77,6 +77,22 @@ PrefabInstance:
       propertyPath: pathFinder
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8346689979097621838, guid: d1e0d30410766ca43a3d2976a49754c5,
+        type: 3}
+      propertyPath: currentGoal
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8346689979097621838, guid: d1e0d30410766ca43a3d2976a49754c5,
+        type: 3}
+      propertyPath: goals.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8346689979097621838, guid: d1e0d30410766ca43a3d2976a49754c5,
+        type: 3}
+      propertyPath: goals.Array.data[3]
+      value: 
+      objectReference: {fileID: 11400000, guid: 8251be03ff0971641969d59537579015,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d1e0d30410766ca43a3d2976a49754c5, type: 3}
 --- !u!1 &1101513318639680770 stripped
@@ -104,4 +120,6 @@ MonoBehaviour:
   preCons: []
   effects:
   - key: hasWood
+    value: 1
+  - key: treeChopped
     value: 1

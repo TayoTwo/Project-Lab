@@ -13,6 +13,7 @@ public class CutTreeAction : Action
         List<State> e = new List<State>();
         needsInRange = true;
         e.Add(new State("hasWood",true));
+        e.Add(new State("treeChopped",true));
 
         actionName = "CutTree";
         preCons = p;
@@ -52,23 +53,24 @@ public class CutTreeAction : Action
 
     IEnumerator CutTree(Agent agent){
 
-        //Debug.Log("CUTTING");
+        if(target == null) {
 
-        UpdateClosestTree(agent);
+            UpdateClosestTree(agent);
+            yield break;
 
-        if(target == null) yield break;
-
-        //Debug.Log("YUP " + agent.isWithinRange(target.position));
+        }
 
         if(agent.isWithinRange(target.position)){
 
             //Debug.Log("DESTROYING");
-            Destroy(target.root.gameObject);
+            Destroy(target.root.gameObject,1.433f);
             agent.backpack.wood++;
 
         }
 
         yield return new WaitForSeconds(1.433f);
+
+        agent.worldState.Find(x => x.key == "treeChopped").SetValue(true);
 
     }
 
@@ -91,6 +93,12 @@ public class CutTreeAction : Action
                 allConditionsMet = false;
 
             }
+
+        }
+
+        if(allConditionsMet){
+
+            agent.worldState.Find(x => x.key == "treeChopped").SetValue(false);
 
         }
 

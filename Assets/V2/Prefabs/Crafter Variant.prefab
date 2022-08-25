@@ -7,6 +7,15 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1354948553, guid: d1e0d30410766ca43a3d2976a49754c5, type: 3}
+      propertyPath: actionName
+      value: MoveToPoint
+      objectReference: {fileID: 0}
+    - target: {fileID: 8346689979097621810, guid: d1e0d30410766ca43a3d2976a49754c5,
+        type: 3}
+      propertyPath: handSlot
+      value: 
+      objectReference: {fileID: 5242846452376342964}
     - target: {fileID: 8346689979097621835, guid: d1e0d30410766ca43a3d2976a49754c5,
         type: 3}
       propertyPath: m_Name
@@ -74,11 +83,49 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8346689979097621838, guid: d1e0d30410766ca43a3d2976a49754c5,
         type: 3}
+      propertyPath: backpack
+      value: 
+      objectReference: {fileID: 4589773391395346484}
+    - target: {fileID: 8346689979097621838, guid: d1e0d30410766ca43a3d2976a49754c5,
+        type: 3}
       propertyPath: pathFinder
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8346689979097621838, guid: d1e0d30410766ca43a3d2976a49754c5,
+        type: 3}
+      propertyPath: currentGoal
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8346689979097621838, guid: d1e0d30410766ca43a3d2976a49754c5,
+        type: 3}
+      propertyPath: closeToTargetDis
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8346689979097621838, guid: d1e0d30410766ca43a3d2976a49754c5,
+        type: 3}
+      propertyPath: goals.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8346689979097621838, guid: d1e0d30410766ca43a3d2976a49754c5,
+        type: 3}
+      propertyPath: goals.Array.data[3]
+      value: 
+      objectReference: {fileID: 11400000, guid: ee689a0dfcff00c48bb8bf99ed05c9a4,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d1e0d30410766ca43a3d2976a49754c5, type: 3}
+--- !u!114 &4589773391395346484 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8346689979097621810, guid: d1e0d30410766ca43a3d2976a49754c5,
+    type: 3}
+  m_PrefabInstance: {fileID: 5505440283393129734}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4589773391395346509}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69bd10c67b1fa7a47b32bf99d389d981, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4589773391395346509 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8346689979097621835, guid: d1e0d30410766ca43a3d2976a49754c5,
@@ -97,16 +144,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 246a575ca6acce74ba4f5e554938c6e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionName: MakePickaxe
+  actionName: MakeTool
   cost: 0
   target: {fileID: 0}
-  needsInRange: 0
+  needsInRange: 1
   preCons:
   - key: hasWood
     value: 1
   - key: hasOre
     value: 1
   effects:
-  - key: haxPickaxe
+  - key: hasTool
     value: 1
-  pickaxe: {fileID: 2466397357022761591, guid: d64370ebb071f054489e57c89ba01632, type: 3}
+  pickaxe: {fileID: 0}
+--- !u!4 &5242846452376342964 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 334697759700085938, guid: d1e0d30410766ca43a3d2976a49754c5,
+    type: 3}
+  m_PrefabInstance: {fileID: 5505440283393129734}
+  m_PrefabAsset: {fileID: 0}

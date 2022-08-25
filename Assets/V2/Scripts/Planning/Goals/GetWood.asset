@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GetWood
   m_EditorClassIdentifier: 
   goalName: GetWood
-  priority: 1
+  priority: 0
   desiredWorldState:
-  - key: hasWood
+  - key: treeChopped
     value: 1

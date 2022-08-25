@@ -160,7 +160,7 @@ public class Agent : MonoBehaviour
     //Move to the actions location
     void MoveToState(){
 
-        Debug.Log("MOVING");
+        //Debug.Log("MOVING");
 
         navMeshAgent.isStopped = false;
         navMeshAgent.SetDestination(currentAction.target.position);
@@ -218,6 +218,7 @@ public class Agent : MonoBehaviour
 
             currentGoal = null;
             currentAction = null;
+            plan = null;
             agentState = AgentState.IDLE;
 
         }
@@ -281,7 +282,7 @@ public class Agent : MonoBehaviour
 
         }
 
-        Debug.Log("STATES TO COMPLETE " + gameObject.name + " " + statesToComplete.Count);
+        //Debug.Log("STATES TO COMPLETE " + gameObject.name + " " + statesToComplete.Count);
         
         if(statesToComplete.Count == 0){
 
@@ -327,8 +328,6 @@ public class Agent : MonoBehaviour
 
         }
 
-        //Debug.Log(canHelp + " " + gameObject.name);
-
         if(canHelp){
 
             //Change the responders goal and create a new plan
@@ -364,4 +363,19 @@ public class Agent : MonoBehaviour
         return actions;
 
     }
+
+    public void ChangeGoal(string goalName){
+
+        currentGoal = goals.Find(x => x.goalName == goalName);
+
+        agentState = AgentState.IDLE;
+
+    }
+
+    void OnDrawGizmos(){
+
+        Debug.DrawLine(transform.position,navMeshAgent.destination);
+
+    }
+    
 }

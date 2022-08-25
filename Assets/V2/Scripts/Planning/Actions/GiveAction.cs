@@ -10,7 +10,7 @@ public class GiveAction : Action
         List<State> p = new List<State>();
         List<State> e = new List<State>();
         e.Add(new State("hasHelped",true));
-
+        needsInRange = true;
         actionName = "Give";
         preCons = p;
         effects = e;
@@ -75,9 +75,13 @@ public class GiveAction : Action
 
         }
 
+        //Reset this state since it has been completed
         if(allConditionsMet){
 
-            agent.worldState.Find(x => x.key == "hasHelped").SetValue(true);
+            Debug.Log("HELPED");
+            agent.worldState.Find(x => x.key == "hasHelped").SetValue(false);
+            preCons.Clear();
+            target = null;
 
         }
 

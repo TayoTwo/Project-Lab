@@ -9,7 +9,9 @@ public class MineOreAction : Action
 
         List<State> p = new List<State>();
         List<State> e = new List<State>();
+        needsInRange = true;
         e.Add(new State("hasOre",true));
+        e.Add(new State("oreMined",true));
 
         actionName = "MineOre";
         preCons = p;
@@ -46,19 +48,25 @@ public class MineOreAction : Action
 
     }
     IEnumerator MineOre(Agent agent){
-        
-        UpdateClosestOre(agent);
 
-        if(target == null) yield break;
+        if(target == null) {
+
+            UpdateClosestOre(agent);
+            yield break;
+
+        }
 
         if(agent.isWithinRange(target.position)){
 
-            Destroy(target.root.gameObject);
+            Destroy(target.root.gameObject,1.433f);
             agent.backpack.ore++;
 
         }
 
         yield return new WaitForSeconds(1.433f);
+
+        agent.worldState.Find(x => x.key == "oreMined").SetValue(true);
+
 
     }
 
@@ -81,6 +89,13 @@ public class MineOreAction : Action
                 allConditionsMet = false;
 
             }
+
+        }
+
+        if(allConditionsMet){
+
+            //Debug.Log("Mined");
+            agent.worldState.Find(x => x.key == "oreMined").SetValue(false);
 
         }
 

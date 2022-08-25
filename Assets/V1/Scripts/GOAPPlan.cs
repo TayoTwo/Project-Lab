@@ -3,27 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class Plan { 
+public class GOAPPlan { 
     [SerializeField]
-    public List<Action> actions;
+    public List<GOAPAction> actions;
     public int cost;
 
-    public Plan(){
+    public GOAPPlan(){
 
         
     }
 
-    public Plan(List<Action> a,int c){
+    public GOAPPlan(List<GOAPAction> a,int c){
 
         actions = a;
         cost = c;
 
     }
 
-    public void AddToPlan(Action action,int c){
+    public void AddToPlan(GOAPAction action,int c){
 
         actions.Add(action);
-        cost += c;
+        cost += action.cost;
 
     }
 

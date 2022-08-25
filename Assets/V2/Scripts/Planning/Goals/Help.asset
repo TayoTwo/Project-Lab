@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Help
   m_EditorClassIdentifier: 
   goalName: Help
-  priority: 2
+  priority: 10
   desiredWorldState:
   - key: hasHelped
     value: 1

@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cbc974a717ab7034eae267bf79cbdfd3, type: 3}
-  m_Name: MakePickaxe
+  m_Name: MoveTo
   m_EditorClassIdentifier: 
-  goalName: MakePickaxe
-  priority: 1
+  goalName: MoveTo
+  priority: 5
   desiredWorldState:
-  - key: hasPickaxe
+  - key: hasMovedTo
     value: 1
