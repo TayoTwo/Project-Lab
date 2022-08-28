@@ -14,6 +14,12 @@ public class ActionPlanner : MonoBehaviour
 
     public Plan FindBestPlan(Goal currentGoal){
 
+        if(currentGoal == null) return null;
+
+        // Debug.Log(currentGoal);
+        // Debug.Log(currentGoal.desiredWorldState[0].key);
+        // Debug.Log(currentGoal.desiredWorldState[0].value);
+
         List<State> dws = currentGoal.desiredWorldState;
         
         if(dws == null){
@@ -118,7 +124,7 @@ public class ActionPlanner : MonoBehaviour
             //Debug.Log(state.key);
             if(agent.worldState.Find(x => x.key == state.key).value.Equals(state.value)){
 
-                //Debug.Log("STATE ALREADY SATISFIED");
+                //Debug.Log("STATE ALREADY SATISFIED " + state.key);
                 desiredWorldState.Remove(state);
 
             }
@@ -153,12 +159,23 @@ public class ActionPlanner : MonoBehaviour
                 List<State> preConditions = action.getPrecons();
 
                 foreach(State state in preConditions){
+
+                    if(!agent.worldState.Find(x => x.key == state.key).value.Equals(state.value)){
                     
-                    tempDesiredWorldState.Add(state);
+                        tempDesiredWorldState.Add(state);
+
+                    }
 
                 }
 
-                //Debug.Log("Action " + action.actionName + " is valid");
+                // Debug.Log("Action " + action.actionName + " is valid");
+                // Debug.Log("DWS Length: " + tempDesiredWorldState.Count);
+
+                // foreach(State s in tempDesiredWorldState){
+
+                //     Debug.Log("States left " + s.key);
+
+                // }
                 
                 //We run this function recursively to check what other actions we need before we can complete this desired world state
                 (TreeNode<PlanStep> branch, bool branchHasSolution) = BuidPlanTree(

@@ -19,9 +19,23 @@ public class Goal : ScriptableObject
 
     }
 
-    public bool isValid(Agent agent){
+    public bool isValid(List<State> worldState){
 
-        return true;
+        bool valid = true;
+
+        foreach(State s in desiredWorldState){
+
+            if(worldState.Find(x => x.key == s.key).value == s.value){
+
+                valid = false;
+
+            }
+
+        }
+
+        //Debug.Log(goalName + " is " + valid);
+
+        return valid;
 
     }
 }

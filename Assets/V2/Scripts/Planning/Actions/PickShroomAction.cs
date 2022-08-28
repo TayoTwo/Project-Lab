@@ -2,36 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MineOreAction : Action
+public class PickShroomAction : Action
 {
 
-    public MineOreAction(){
+    public PickShroomAction(){
 
         List<State> p = new List<State>();
         List<State> e = new List<State>();
         needsInRange = true;
-        e.Add(new State("hasOre",true));
+        e.Add(new State("hasShroom",true));
 
-        actionName = "MineOre";
+        actionName = "PickShroom";
         preCons = p;
         effects = e;
 
     }
 
-    void UpdateClosestOre(Agent agent){
+    void UpdateClosestShroom(Agent agent){
 
-        GameObject[] ores = GameObject.FindGameObjectsWithTag("Ore");
-        if(ores.Length == 0) return;
-        target = ores[0].transform;
+        GameObject[] shrooms = GameObject.FindGameObjectsWithTag("Shroom");
+        if(shrooms.Length == 0) return;
+        target = shrooms[0].transform;
 
-        foreach(GameObject ore in ores){
+        foreach(GameObject shroom in shrooms){
 
             int disA = agent.gridManager.CalculateCost(agent.transform.position,target.position);
-            int disB = agent.gridManager.CalculateCost(agent.transform.position,ore.transform.position);
+            int disB = agent.gridManager.CalculateCost(agent.transform.position,shroom.transform.position);
 
             if(disB < disA){
 
-                target = ore.transform;
+                target = shroom.transform;
 
             }
 
@@ -41,9 +41,9 @@ public class MineOreAction : Action
 
     public override int getCost(List<State> worldState,Agent agent){
 
-        if(GameObject.FindGameObjectsWithTag("Ore").Length > 0){
+        if(GameObject.FindGameObjectsWithTag("Shroom").Length > 0){
 
-            UpdateClosestOre(agent);
+            UpdateClosestShroom(agent);
             return agent.gridManager.CalculateCost(agent.transform.position,target.position);
 
         } else {
@@ -54,13 +54,13 @@ public class MineOreAction : Action
 
     }
     
-    IEnumerator MineOre(Agent agent){
+    IEnumerator PickShroom(Agent agent){
     
         if(busy) yield break;
 
         if(target == null) {
 
-            UpdateClosestOre(agent);
+            UpdateClosestShroom(agent);
             yield break;
 
         }
@@ -71,7 +71,7 @@ public class MineOreAction : Action
 
         if(agent.isWithinRange(target.position)){
 
-            agent.backpack.ore++;
+            agent.backpack.shrooms++;
             Destroy(target.root.gameObject);
 
         }
@@ -82,7 +82,7 @@ public class MineOreAction : Action
 
     public override bool isValid(){
         
-        if(GameObject.FindGameObjectsWithTag("Ore").Length == 0) return false;
+        if(GameObject.FindGameObjectsWithTag("Shroom").Length == 0) return false;
 
         return true; 
 
@@ -96,7 +96,7 @@ public class MineOreAction : Action
         //Destroy tree
         //Add resource to inventory
 
-        StartCoroutine(MineOre(agent));
+        StartCoroutine(PickShroom(agent));
 
         base.perform(agent);
 

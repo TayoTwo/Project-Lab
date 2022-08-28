@@ -5,7 +5,7 @@ using UnityEngine;
 public class MakeToolAction : Action
 {
 
-    public GameObject pickaxe;
+    public GameObject tool;
 
     public MakeToolAction(){
 
@@ -29,11 +29,11 @@ public class MakeToolAction : Action
 
         foreach(GameObject bench in benches){
 
-            int disA = agent.pathFinder.CalculateCost(agent.transform.position,target.position);
-            int disB = agent.pathFinder.CalculateCost(agent.transform.position,bench.transform.position);
+            int disA = agent.gridManager.CalculateCost(agent.transform.position,target.position);
+            int disB = agent.gridManager.CalculateCost(agent.transform.position,bench.transform.position);
 
 
-            if(disB > disA){
+            if(disB < disA){
 
                 target = bench.transform;
 
@@ -45,28 +45,52 @@ public class MakeToolAction : Action
 
     public override int getCost(List<State> worldState,Agent agent){
 
-        UpdateClosestWorkBench(agent);
-        
-        return agent.pathFinder.CalculateCost(agent.transform.position,target.position);
+        if(GameObject.FindGameObjectsWithTag("Workbench").Length > 0){
+
+            UpdateClosestWorkBench(agent);
+            return agent.gridManager.CalculateCost(agent.transform.position,target.position);
+
+        } else {
+
+            return 0;
+
+        }
 
     }
 
     IEnumerator MakeTool(Agent agent){
 
-        UpdateClosestWorkBench(agent);
+        if(busy) yield break;
 
-        if(target == null) yield break;
+        if(target == null) {
+
+            UpdateClosestWorkBench(agent);
+            yield break;
+
+        } 
+
+        busy = true;
+
+        yield return new WaitForSeconds(1.433f);
 
         if(agent.isWithinRange(target.position)){
 
             agent.backpack.wood--;
             agent.backpack.ore--;
-            GameObject pick = (GameObject)Instantiate(pickaxe,transform.position,Quaternion.identity);
+            GameObject pick = (GameObject)Instantiate(tool,transform.position,Quaternion.identity);
             agent.backpack.tool = pick;
 
         }
 
-        yield return new WaitForSeconds(1.433f);
+        busy = false;
+
+    }
+
+    public override bool isValid(){
+        
+        if(GameObject.FindGameObjectsWithTag("Workbench").Length == 0) return false;
+
+        return true; 
 
     }
 

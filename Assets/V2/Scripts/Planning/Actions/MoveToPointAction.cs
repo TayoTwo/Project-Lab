@@ -23,7 +23,7 @@ public class MoveToPointAction : Action
 
     public override int getCost(List<State> worldState,Agent agent){
         
-        return agent.pathFinder.CalculateCost(agent.transform.position,moveToPos);
+        return agent.gridManager.CalculateCost(agent.transform.position,moveToPos);
 
     }
 
@@ -38,20 +38,11 @@ public class MoveToPointAction : Action
         if(agent.isWithinRange(target.position)){
 
             agent.worldState.Find(x => x.key == "hasMovedTo").SetValue(true);
+            Destroy(target.gameObject);
 
         }
 
-        bool allConditionsMet = true;
-
-        foreach(State state in getEffects()){
-
-            if(!agent.worldState.Find(x => x.key == state.key).value.Equals(state.value)){
-
-                allConditionsMet = false;
-
-            }
-
-        }
+        base.perform(agent);
 
         //Reset this state since it has been completed
         if(allConditionsMet){

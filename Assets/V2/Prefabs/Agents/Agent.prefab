@@ -763,12 +763,14 @@ GameObject:
   m_Component:
   - component: {fileID: 8346689979097621836}
   - component: {fileID: 8346689979097621809}
+  - component: {fileID: 7305682985170748664}
   - component: {fileID: 8346689979097621810}
   - component: {fileID: 8346689979097621838}
   - component: {fileID: 8346689979097621808}
   - component: {fileID: 8346689979097621811}
   - component: {fileID: 568069354}
   - component: {fileID: 1354948553}
+  - component: {fileID: 8688970405744596172}
   m_Layer: 0
   m_Name: Agent
   m_TagString: Agent
@@ -814,6 +816,20 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &7305682985170748664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8346689979097621835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da8d80629ab3ab34ea28a5e561c865e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hunger: 1
+  starveRate: 0.1
 --- !u!114 &8346689979097621810
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -828,6 +844,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wood: 0
   ore: 0
+  shrooms: 0
   tool: {fileID: 0}
   handSlot: {fileID: 0}
 --- !u!114 &8346689979097621838
@@ -844,11 +861,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agentState: 0
   closeToTargetDis: 2
+  isIdle: 0
   plan:
     actions: []
     cost: 0
   currentPlanStep: 0
-  currentGoal: {fileID: 11400000, guid: ee689a0dfcff00c48bb8bf99ed05c9a4, type: 2}
+  currentGoal: {fileID: 0}
   currentAction: {fileID: 0}
   currentActionName: 
   worldState:
@@ -856,26 +874,27 @@ MonoBehaviour:
     value: 0
   - key: hasOre
     value: 0
+  - key: hasShroom
+    value: 0
   - key: hasTool
     value: 0
   - key: hasHelped
     value: 0
   - key: hasMovedTo
     value: 0
-  - key: treeChopped
-    value: 0
-  - key: oreMined
+  - key: isHungry
     value: 0
   goals:
+  - {fileID: 11400000, guid: 8251be03ff0971641969d59537579015, type: 2}
+  - {fileID: 11400000, guid: 892be020ce62c78459c2ae968a44404d, type: 2}
+  - {fileID: 11400000, guid: 8d772cae487790f44928aafac4966840, type: 2}
+  - {fileID: 11400000, guid: ee689a0dfcff00c48bb8bf99ed05c9a4, type: 2}
   - {fileID: 11400000, guid: f427e914f43c0e34299ea8250b58c1b2, type: 2}
   - {fileID: 11400000, guid: 36f8009c94d512646822b78ca8beed94, type: 2}
-  - {fileID: 11400000, guid: f427e914f43c0e34299ea8250b58c1b2, type: 2}
-  - {fileID: 11400000, guid: 892be020ce62c78459c2ae968a44404d, type: 2}
-  - {fileID: 11400000, guid: 8251be03ff0971641969d59537579015, type: 2}
-  - {fileID: 11400000, guid: ee689a0dfcff00c48bb8bf99ed05c9a4, type: 2}
   actions: []
-  pathFinder: {fileID: 0}
+  gridManager: {fileID: 0}
   backpack: {fileID: 0}
+  hunger: {fileID: 0}
 --- !u!114 &8346689979097621808
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -925,6 +944,8 @@ MonoBehaviour:
   effects:
   - key: hasHelped
     value: 1
+  busy: 0
+  allConditionsMet: 1
 --- !u!114 &1354948553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -945,7 +966,33 @@ MonoBehaviour:
   effects:
   - key: hasMovedTo
     value: 1
+  busy: 0
+  allConditionsMet: 1
   moveToPos: {x: 0, y: 0, z: 0}
+--- !u!114 &8688970405744596172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8346689979097621835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71fb45684145c484f9ea720c82a3822f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actionName: Eat
+  cost: 0
+  target: {fileID: 0}
+  needsInRange: 0
+  preCons:
+  - key: hasShroom
+    value: 1
+  effects:
+  - key: isHungry
+    value: 0
+  busy: 0
+  allConditionsMet: 1
 --- !u!1 &8346689980048352326
 GameObject:
   m_ObjectHideFlags: 0

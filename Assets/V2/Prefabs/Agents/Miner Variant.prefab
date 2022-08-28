@@ -85,13 +85,13 @@ PrefabInstance:
     - target: {fileID: 8346689979097621838, guid: d1e0d30410766ca43a3d2976a49754c5,
         type: 3}
       propertyPath: goals.Array.size
-      value: 4
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8346689979097621838, guid: d1e0d30410766ca43a3d2976a49754c5,
         type: 3}
       propertyPath: goals.Array.data[3]
       value: 
-      objectReference: {fileID: 11400000, guid: 892be020ce62c78459c2ae968a44404d,
+      objectReference: {fileID: 11400000, guid: ee689a0dfcff00c48bb8bf99ed05c9a4,
         type: 2}
     m_RemovedComponents:
     - {fileID: 2488741394234807333, guid: d1e0d30410766ca43a3d2976a49754c5, type: 3}
@@ -122,5 +122,4 @@ MonoBehaviour:
   effects:
   - key: hasOre
     value: 1
-  - key: oreMined
-    value: 1
+  busy: 0

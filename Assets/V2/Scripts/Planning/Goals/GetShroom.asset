@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cbc974a717ab7034eae267bf79cbdfd3, type: 3}
-  m_Name: GetWood
+  m_Name: GetShroom
   m_EditorClassIdentifier: 
-  goalName: GetWood
+  goalName: GetShroom
   priority: 0
   desiredWorldState:
-  - key: hasWood
+  - key: hasShroom
     value: 1

@@ -21,6 +21,12 @@ public class GiveAction : Action
 
         Backpack reciever = target.GetComponent<Backpack>();
 
+        if(busy || target == null) yield break;
+
+        busy = true;
+
+        yield return new WaitForSeconds(1.433f);
+
         if(agent.isWithinRange(target.position)){
 
             foreach(State state in preCons){
@@ -44,8 +50,16 @@ public class GiveAction : Action
             }
 
         }
+        
+        busy = false;
 
-        yield return new WaitForSeconds(1.433f);
+    }
+
+    public override bool isValid(){
+
+        if(target == null) return false;
+
+        return true;
 
     }
 
@@ -63,25 +77,12 @@ public class GiveAction : Action
             
         }
 
-        bool allConditionsMet = true;
+        base.perform(agent);    
 
-        foreach(State state in getEffects()){
-
-            if(!agent.worldState.Find(x => x.key == state.key).value.Equals(state.value)){
-
-                allConditionsMet = false;
-
-            }
-
-        }
-
-        //Reset this state since it has been completed
         if(allConditionsMet){
 
-            Debug.Log("HELPED");
-            agent.worldState.Find(x => x.key == "hasHelped").SetValue(false);
-            preCons.Clear();
             target = null;
+            preCons.Clear();
 
         }
 

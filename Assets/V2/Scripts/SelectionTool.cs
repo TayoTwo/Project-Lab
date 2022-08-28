@@ -7,13 +7,12 @@ public class SelectionTool : MonoBehaviour
 
     public GameObject selectedObject;
     public Vector3 mousePoint;
-    public Transform moveToPoint;
     public UIManager uIManager;
     public GameObject actionPanel;
     public int goalIndex;
     public List<Goal> goals;
     InputMaster inputMaster;
-
+    GameObject moveToPoint;
 
     // Start is called before the first frame update
     void Awake()
@@ -66,7 +65,7 @@ public class SelectionTool : MonoBehaviour
         if(Physics.Raycast(ray,out hitPoint)){
 
             hitObject = hitPoint.transform.root;
-            Debug.Log("Hit " + hitObject.name);
+            //Debug.Log("Hit " + hitObject.name);
 
             selectedObject = hitObject.gameObject;
 
@@ -89,12 +88,13 @@ public class SelectionTool : MonoBehaviour
 
         Ray ray = Camera.main.ScreenPointToRay(new Vector3(inputMaster.Player.MousePosition.ReadValue<Vector2>().x,inputMaster.Player.MousePosition.ReadValue<Vector2>().y,Camera.main.nearClipPlane));
         RaycastHit hitPoint;
+        moveToPoint = new GameObject();
 
         if(Physics.Raycast(ray,out hitPoint)){
 
-            Debug.Log("Right clicked " + hitPoint.transform.root.tag);
+            //Debug.Log("Right clicked " + hitPoint.transform.root.tag);
 
-            moveToPoint.position = hitPoint.point;
+            moveToPoint.transform.position = hitPoint.point;
 
             if(selectedObject.GetComponent<Agent>() != null){
 
@@ -106,6 +106,7 @@ public class SelectionTool : MonoBehaviour
                     case "Tree":
 
                         agent.ChangeGoal("GetWood");
+
                         if(agent.GetComponent<CutTreeAction>() != null){
 
                             agent.GetComponent<CutTreeAction>().target = hitPoint.transform.root;
@@ -115,7 +116,8 @@ public class SelectionTool : MonoBehaviour
 
                     case "Ore":
 
-                        agent.ChangeGoal("MineOre");
+                        agent.ChangeGoal("GetOre");
+
                         if(agent.GetComponent<MineOreAction>() != null){
 
                             agent.GetComponent<MineOreAction>().target = hitPoint.transform.root;
@@ -123,9 +125,23 @@ public class SelectionTool : MonoBehaviour
                         }
                         break;
 
+                    case "Shroom":
+
+                        agent.ChangeGoal("GetShroom");
+
+                        if(agent.GetComponent<PickShroomAction>() != null){
+
+                            //Debug.Log("Selected Shroom");
+                            agent.GetComponent<PickShroomAction>().target = hitPoint.transform.root;
+
+                        }
+
+                        break;
+
                     case "Workbench":
 
                         agent.ChangeGoal("MakeTool");
+
                         if(agent.GetComponent<MakeToolAction>() != null){
 
                             agent.GetComponent<MakeToolAction>().target = hitPoint.transform.root;
@@ -135,10 +151,10 @@ public class SelectionTool : MonoBehaviour
 
                     default:
 
-                        Debug.Log("[" + hitPoint.transform.root.tag + "]");
+                        //Debug.Log("[" + hitPoint.transform.root.tag + "]");
 
                         agent.ChangeGoal("MoveTo");
-                        agent.GetComponent<MoveToPointAction>().target = moveToPoint;
+                        agent.GetComponent<MoveToPointAction>().target = moveToPoint.transform;
 
                         break;
 

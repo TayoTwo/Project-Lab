@@ -20,6 +20,7 @@ public class Agent : MonoBehaviour
     public float closeToTargetDis;
     
     [Header("Live Agent Information")]
+    public bool isIdle;
     public Plan plan;
     public int currentPlanStep;
     public Goal currentGoal;
@@ -30,8 +31,9 @@ public class Agent : MonoBehaviour
     //public AgentSettings agentSettings;
     public List<Goal> goals;
     public List<Action> actions = new List<Action>();
-    public PathFinder pathFinder;
+    public GridManager gridManager;
     public Backpack backpack;
+    public Hunger hunger;
     ActionPlanner actionPlanner;
     NavMeshAgent navMeshAgent;
     AnimationController animationController;
@@ -39,7 +41,7 @@ public class Agent : MonoBehaviour
 
     void Awake(){
 
-        pathFinder = FindObjectOfType<PathFinder>();
+        gridManager = FindObjectOfType<GridManager>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         actionPlanner = GetComponent<ActionPlanner>();
         animationController = GetComponent<AnimationController>();
@@ -49,7 +51,7 @@ public class Agent : MonoBehaviour
         //Set goals
         //Add all relevant effects to world state
         Action[] foundActions = gameObject.GetComponents<Action>();
-        Debug.Log(foundActions.Length);
+        //Debug.Log(foundActions.Length);
         foreach(Action action in foundActions){
 
             actions.Add(action);
@@ -111,6 +113,51 @@ public class Agent : MonoBehaviour
 
     }
 
+    //GetBestGoal
+
+    public Goal GetBestGoal(){
+
+        List<Goal> validGoals = new List<Goal>();
+        validGoals.Clear();
+
+        //Make a list of valid goals
+        foreach(Goal g in goals){
+
+            if(g.isValid(worldState)){
+
+                validGoals.Add(g);
+
+            }
+
+        }
+
+        //Debug.Log("Valid GOALS " + validGoals.Count);
+
+        if(validGoals.Count == 0){
+
+            Debug.Log("NO VALID GOALS");
+            currentGoal = null;
+            return null;
+
+        }
+
+        highestPriorityGoal = null;
+
+        //Loop through our list of valid goals and check which has the highest priority
+        foreach(Goal g in validGoals){
+
+            if(highestPriorityGoal != null && g.priority > highestPriorityGoal.priority){
+
+                highestPriorityGoal = g;
+
+            }
+
+        }
+
+        return highestPriorityGoal;
+
+    }
+
     //Essentially the plan maker
     void IdleState(){
 
@@ -118,13 +165,17 @@ public class Agent : MonoBehaviour
 
         navMeshAgent.isStopped = true;
 
-        if(currentGoal != null){
+        if(currentGoal == null || !currentGoal.isValid(worldState)){
+
+            currentGoal = GetBestGoal();
+
+        }
+
+        isIdle = (currentGoal == null) ? true : false;
+
+        if(currentGoal != null || currentAction == null || !currentAction.isValid()){
 
             plan = actionPlanner.FindBestPlan(currentGoal);
-
-        } else {
-
-            return;
 
         }
 
@@ -146,7 +197,7 @@ public class Agent : MonoBehaviour
 
             }
 
-        } else {
+        } else if(!isIdle){
 
             agentState = AgentState.SIGNAL;
             return;
@@ -176,7 +227,7 @@ public class Agent : MonoBehaviour
         if(isWithinRange(currentAction.target.position)){
 
             agentState = AgentState.PERFORM;
-            Debug.Log("IN RANGE TO PERFORM");
+            //Debug.Log("IN RANGE TO PERFORM");
             return;
 
         }
@@ -187,6 +238,8 @@ public class Agent : MonoBehaviour
 
     //Perform the action
     void PerformActionState(){
+
+        //Debug.Log("PERFORMING");
 
         navMeshAgent.isStopped = true;
 
@@ -214,19 +267,28 @@ public class Agent : MonoBehaviour
             currentAction = plan.actions[currentPlanStep];
             agentState = AgentState.MOVETO;
 
-        } else if(currentPlanStep >= plan.actions.Count - 1){
+        } else if(stepComplete && currentPlanStep >= plan.actions.Count - 1){
 
+            Debug.Log("PLAN COMPLETE");
             currentGoal = null;
             currentAction = null;
             plan = null;
+            currentPlanStep = 0;
             agentState = AgentState.IDLE;
+
+        }
+
+        if(!currentAction.isValid()){
+
+            agentState = AgentState.IDLE;
+            return;
 
         }
 
     }
     void SignalState(){
 
-        Debug.Log("SIGNALING");
+        //Debug.Log("SIGNALING");
 
         List<State> statesToComplete = new List<State>(currentGoal.desiredWorldState);
         
@@ -260,6 +322,7 @@ public class Agent : MonoBehaviour
         }
 
         GameObject[] agents = GameObject.FindGameObjectsWithTag("Agent");
+        List<(Agent,bool)> helpers = new List<(Agent,bool)>();
 
         foreach(GameObject a in agents){
 
@@ -267,8 +330,11 @@ public class Agent : MonoBehaviour
             if(a.GetComponent<Agent>().currentGoal != null) continue;
 
             Agent agentComp = a.GetComponent<Agent>();
+            bool canHelp = false;
 
-            statesToComplete = agentComp.RespondToSignal(statesToComplete,this);
+            (statesToComplete,canHelp) = agentComp.RespondToSignal(statesToComplete,this);
+
+            helpers.Add((agentComp,canHelp));
 
         }
 
@@ -277,6 +343,10 @@ public class Agent : MonoBehaviour
             if(worldState.Find(x => x.key == state.key).value.Equals(state.value)){
 
                 statesToComplete.Remove(state);
+
+            } else {
+
+                //Debug.Log("NEED TO COMPELTE" + state.key);
 
             }
 
@@ -287,6 +357,13 @@ public class Agent : MonoBehaviour
         if(statesToComplete.Count == 0){
 
             agentState = AgentState.IDLE;
+
+            // foreach((Agent,bool) h in helpers){
+
+            //     h.Item1.RespondToSignal(statesToComplete,this);
+
+            // }
+
             return;
 
         }
@@ -297,7 +374,18 @@ public class Agent : MonoBehaviour
 
     }
 
-    public List<State> RespondToSignal(List<State> statesToComplete, Agent caller){
+    public (List<State> , bool) RespondToSignal(List<State> statesToComplete, Agent caller){
+
+        //Debug.Log(caller.name + " " + caller.agentState);
+
+        if(caller.agentState != AgentState.SIGNAL) {
+
+            Debug.Log("CALLER HAS BEEN SATISFIED");
+
+            caller = null;
+            ResetAgent();
+
+        }
 
         bool canHelp = false;
         List<State> statesLeft = new List<State>(statesToComplete);
@@ -318,6 +406,7 @@ public class Agent : MonoBehaviour
 
                 if(effects.Find(x => x.key == state.key).value.Equals(state.value)){
 
+                    //Debug.Log(gameObject.name + " CAN HELP " + caller.name);
                     toDoList.Add(state);
                     statesLeft.Remove(state);
                     canHelp = true;
@@ -339,9 +428,14 @@ public class Agent : MonoBehaviour
 
             agentState = AgentState.IDLE;
 
+        } else {
+
+            caller = null;
+            ResetAgent();
+
         }
 
-        return statesLeft;
+        return (statesLeft, canHelp);
     }
 
     public bool isWithinRange(Vector3 targetPos){
@@ -366,13 +460,27 @@ public class Agent : MonoBehaviour
 
     public void ChangeGoal(string goalName){
 
+        if(!goals.Find(x => x.goalName == goalName).isValid(worldState)) return;
+
         currentGoal = goals.Find(x => x.goalName == goalName);
 
         agentState = AgentState.IDLE;
 
     }
 
+    void ResetAgent(){
+
+        currentGoal = null;
+        currentAction = null;
+        plan = null;
+        currentPlanStep = 0;
+        agentState = AgentState.IDLE;
+
+    }
+
     void OnDrawGizmos(){
+
+        if(navMeshAgent == null) return;
 
         Debug.DrawLine(transform.position,navMeshAgent.destination);
 

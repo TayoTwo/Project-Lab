@@ -7,6 +7,7 @@ public class UIManager : MonoBehaviour
 {
 
     public TMP_Text agentName;
+    public TMP_Dropdown currentState;
     public TMP_Text currentGoal;
     public TMP_Text currentAction;
     public TMP_Dropdown actionDropdown;
@@ -31,7 +32,7 @@ public class UIManager : MonoBehaviour
 
         Agent selectedAgent = selectionTool.selectedObject.GetComponent<Agent>();
 
-        agentName.text = "Name: " + selectedAgent.gameObject.name;
+        agentName.text = selectedAgent.gameObject.name;
 
         if(selectedAgent.currentGoal == null || selectedAgent.currentAction == null){
 
@@ -45,6 +46,8 @@ public class UIManager : MonoBehaviour
 
         }
 
+        //Availible Actions
+
         actionDropdown.ClearOptions();
 
         List<TMP_Dropdown.OptionData> optionData = new List<TMP_Dropdown.OptionData>();
@@ -55,7 +58,8 @@ public class UIManager : MonoBehaviour
 
         }
 
-        actionDropdown.AddOptions(optionData);
+        //Current 
+        currentState.value = (int)selectedAgent.agentState;
 
     }
 

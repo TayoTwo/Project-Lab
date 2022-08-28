@@ -12,6 +12,8 @@ public class Action : MonoBehaviour
     public bool needsInRange;
     public List<State> preCons;
     public List<State> effects;
+    public bool busy;
+    public bool allConditionsMet = true;
 
     public List<State> getPrecons(){
 
@@ -37,11 +39,17 @@ public class Action : MonoBehaviour
 
     }
 
+    public virtual bool isValid(){
+
+        return true;
+
+    }
+
     public virtual bool perform(Agent agent){
 
         //Perform action
 
-        bool allConditionsMet = true;
+        allConditionsMet = true;
 
         foreach(State state in getEffects()){
 

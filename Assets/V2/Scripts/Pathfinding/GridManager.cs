@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PathFinder : MonoBehaviour{
+public class GridManager : MonoBehaviour{
 
     [Header("Cell Info")]
     public LayerMask layerMask;
@@ -12,7 +12,7 @@ public class PathFinder : MonoBehaviour{
     //public Transform targetPos;
     public List<Cell> openSet = new List<Cell>();
     public List<Cell> closedSet = new List<Cell>();
-    Vector3 offset;
+    public Vector3 offset;
 
 /* CELL MANAGER */
     //Setup the grid

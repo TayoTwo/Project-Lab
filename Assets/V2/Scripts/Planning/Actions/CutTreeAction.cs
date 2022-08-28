@@ -13,7 +13,6 @@ public class CutTreeAction : Action
         List<State> e = new List<State>();
         needsInRange = true;
         e.Add(new State("hasWood",true));
-        e.Add(new State("treeChopped",true));
 
         actionName = "CutTree";
         preCons = p;
@@ -29,8 +28,8 @@ public class CutTreeAction : Action
 
         foreach(GameObject tree in trees){
 
-            int disA = agent.pathFinder.CalculateCost(agent.transform.position,target.position);
-            int disB = agent.pathFinder.CalculateCost(agent.transform.position,tree.transform.position);
+            int disA = agent.gridManager.CalculateCost(agent.transform.position,target.position);
+            int disB = agent.gridManager.CalculateCost(agent.transform.position,tree.transform.position);
 
 
             if(disB < disA){
@@ -45,32 +44,52 @@ public class CutTreeAction : Action
 
     public override int getCost(List<State> worldState,Agent agent){
 
-        UpdateClosestTree(agent);
-        
-        return agent.pathFinder.CalculateCost(agent.transform.position,target.position);
+        if(GameObject.FindGameObjectsWithTag("Tree").Length > 0){
+
+            UpdateClosestTree(agent);
+            return agent.gridManager.CalculateCost(agent.transform.position,target.position);
+
+        } else {
+
+            return 0;
+
+        }
 
     }
 
     IEnumerator CutTree(Agent agent){
+
+        if(busy) yield break;
 
         if(target == null) {
 
             UpdateClosestTree(agent);
             yield break;
 
-        }
+        } 
+
+        busy = true;
+
+        yield return new WaitForSeconds(1.433f);
 
         if(agent.isWithinRange(target.position)){
 
             //Debug.Log("DESTROYING");
-            Destroy(target.root.gameObject,1.433f);
             agent.backpack.wood++;
+            Destroy(target.root.gameObject);
 
         }
 
-        yield return new WaitForSeconds(1.433f);
 
-        agent.worldState.Find(x => x.key == "treeChopped").SetValue(true);
+        busy = false;
+
+    }
+
+    public override bool isValid(){
+        
+        if(GameObject.FindGameObjectsWithTag("Tree").Length == 0) return false;
+
+        return true; 
 
     }
 
@@ -84,23 +103,7 @@ public class CutTreeAction : Action
 
         StartCoroutine(CutTree(agent));
 
-        bool allConditionsMet = true;
-
-        foreach(State state in getEffects()){
-
-            if(!agent.worldState.Find(x => x.key == state.key).value.Equals(state.value)){
-
-                allConditionsMet = false;
-
-            }
-
-        }
-
-        if(allConditionsMet){
-
-            agent.worldState.Find(x => x.key == "treeChopped").SetValue(false);
-
-        }
+        base.perform(agent);
 
         return allConditionsMet;
 

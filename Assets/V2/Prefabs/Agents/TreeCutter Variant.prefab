@@ -1,25 +1,16 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &5505440283393129734
+--- !u!1001 &8979116451332626505
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1354948553, guid: d1e0d30410766ca43a3d2976a49754c5, type: 3}
-      propertyPath: actionName
-      value: MoveToPoint
-      objectReference: {fileID: 0}
-    - target: {fileID: 8346689979097621810, guid: d1e0d30410766ca43a3d2976a49754c5,
-        type: 3}
-      propertyPath: handSlot
-      value: 
-      objectReference: {fileID: 5242846452376342964}
     - target: {fileID: 8346689979097621835, guid: d1e0d30410766ca43a3d2976a49754c5,
         type: 3}
       propertyPath: m_Name
-      value: Crafter
+      value: TreeCutter
       objectReference: {fileID: 0}
     - target: {fileID: 8346689979097621835, guid: d1e0d30410766ca43a3d2976a49754c5,
         type: 3}
@@ -34,7 +25,7 @@ PrefabInstance:
     - target: {fileID: 8346689979097621836, guid: d1e0d30410766ca43a3d2976a49754c5,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -8
       objectReference: {fileID: 0}
     - target: {fileID: 8346689979097621836, guid: d1e0d30410766ca43a3d2976a49754c5,
         type: 3}
@@ -83,11 +74,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8346689979097621838, guid: d1e0d30410766ca43a3d2976a49754c5,
         type: 3}
-      propertyPath: backpack
-      value: 
-      objectReference: {fileID: 4589773391395346484}
-    - target: {fileID: 8346689979097621838, guid: d1e0d30410766ca43a3d2976a49754c5,
-        type: 3}
       propertyPath: pathFinder
       value: 
       objectReference: {fileID: 0}
@@ -98,13 +84,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8346689979097621838, guid: d1e0d30410766ca43a3d2976a49754c5,
         type: 3}
-      propertyPath: closeToTargetDis
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8346689979097621838, guid: d1e0d30410766ca43a3d2976a49754c5,
-        type: 3}
       propertyPath: goals.Array.size
-      value: 4
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8346689979097621838, guid: d1e0d30410766ca43a3d2976a49754c5,
         type: 3}
@@ -114,52 +95,32 @@ PrefabInstance:
         type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d1e0d30410766ca43a3d2976a49754c5, type: 3}
---- !u!114 &4589773391395346484 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8346689979097621810, guid: d1e0d30410766ca43a3d2976a49754c5,
-    type: 3}
-  m_PrefabInstance: {fileID: 5505440283393129734}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4589773391395346509}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69bd10c67b1fa7a47b32bf99d389d981, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!1 &4589773391395346509 stripped
+--- !u!1 &1101513318639680770 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8346689979097621835, guid: d1e0d30410766ca43a3d2976a49754c5,
     type: 3}
-  m_PrefabInstance: {fileID: 5505440283393129734}
+  m_PrefabInstance: {fileID: 8979116451332626505}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5894584301481285410
+--- !u!114 &1101189531615068986
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4589773391395346509}
+  m_GameObject: {fileID: 1101513318639680770}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 246a575ca6acce74ba4f5e554938c6e1, type: 3}
+  m_Script: {fileID: 11500000, guid: 7c80f32d38fa4d148b597811b9f62b10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionName: MakeTool
+  actionName: CutTree
   cost: 0
   target: {fileID: 0}
   needsInRange: 1
-  preCons:
+  preCons: []
+  effects:
   - key: hasWood
     value: 1
-  - key: hasOre
+  - key: treeChopped
     value: 1
-  effects:
-  - key: hasTool
-    value: 1
-  pickaxe: {fileID: 0}
---- !u!4 &5242846452376342964 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 334697759700085938, guid: d1e0d30410766ca43a3d2976a49754c5,
-    type: 3}
-  m_PrefabInstance: {fileID: 5505440283393129734}
-  m_PrefabAsset: {fileID: 0}
+  busy: 0
