@@ -7,7 +7,7 @@ public class EatAction : Action
     public EatAction(){
 
         List<State> p = new List<State>();
-        p.Add(new State("hasShroom",true));
+        p.Add(new State("hasShrooms",true));
         List<State> e = new List<State>();
         e.Add(new State("isHungry",false));
 
@@ -23,10 +23,34 @@ public class EatAction : Action
 
     }
 
-    public override bool perform(Agent agent){
+    IEnumerator Eat(Agent agent){
+
+        if(busy) yield break;
+
+        busy = true;
+
+        yield return new WaitForSeconds(1.433f);
 
         agent.backpack.shrooms--;
         agent.hunger.hunger = 1;
+
+        //Debug.Log("EATING");
+
+        busy = false;
+
+    }
+
+    public override bool isValid(Agent agent){
+
+        if(agent.worldState.Find(x => x.key == "isHungry").value) return true;
+
+        return false;
+
+    }
+
+    public override bool perform(Agent agent){
+
+        StartCoroutine(Eat(agent));
 
         base.perform(agent);
 

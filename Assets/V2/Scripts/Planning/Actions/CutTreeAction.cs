@@ -59,6 +59,12 @@ public class CutTreeAction : Action
 
     IEnumerator CutTree(Agent agent){
 
+        //Perform action
+        //Find nearest tree
+        //Set tree as target
+        //Destroy tree
+        //Add resource to inventory
+
         if(busy) yield break;
 
         if(target == null) {
@@ -85,7 +91,7 @@ public class CutTreeAction : Action
 
     }
 
-    public override bool isValid(){
+    public override bool isValid(Agent agent){
         
         if(GameObject.FindGameObjectsWithTag("Tree").Length == 0) return false;
 
@@ -94,12 +100,6 @@ public class CutTreeAction : Action
     }
 
     public override bool perform(Agent agent){
-
-        //Perform action
-        //Find nearest tree
-        //Set tree as target
-        //Destroy tree
-        //Add resource to inventory
 
         StartCoroutine(CutTree(agent));
 

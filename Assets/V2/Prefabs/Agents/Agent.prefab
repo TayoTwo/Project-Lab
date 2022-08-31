@@ -874,7 +874,7 @@ MonoBehaviour:
     value: 0
   - key: hasOre
     value: 0
-  - key: hasShroom
+  - key: hasShrooms
     value: 0
   - key: hasTool
     value: 0
@@ -891,6 +891,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ee689a0dfcff00c48bb8bf99ed05c9a4, type: 2}
   - {fileID: 11400000, guid: f427e914f43c0e34299ea8250b58c1b2, type: 2}
   - {fileID: 11400000, guid: 36f8009c94d512646822b78ca8beed94, type: 2}
+  - {fileID: 11400000, guid: b611848d58162744f89e2786a234c7ca, type: 2}
   actions: []
   gridManager: {fileID: 0}
   backpack: {fileID: 0}

@@ -11,7 +11,7 @@ public class AnimationController : MonoBehaviour
     public bool signaling;
 
     // Update is called once per frame
-    void LateUpdate()
+    void Update()
     {
         
         animator.SetBool("moving", moving);

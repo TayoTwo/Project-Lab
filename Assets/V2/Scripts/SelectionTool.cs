@@ -11,6 +11,8 @@ public class SelectionTool : MonoBehaviour
     public GameObject actionPanel;
     public int goalIndex;
     public List<Goal> goals;
+    public bool buildMode;
+    public int blockType = -1;
     InputMaster inputMaster;
     GameObject moveToPoint;
 
@@ -25,7 +27,6 @@ public class SelectionTool : MonoBehaviour
 
     }
 
-    
     void OnEnable(){
 
         inputMaster.Enable();
@@ -75,6 +76,7 @@ public class SelectionTool : MonoBehaviour
 
             } else {
 
+                buildMode = false;
                 actionPanel.SetActive(false);
 
             }
@@ -101,64 +103,105 @@ public class SelectionTool : MonoBehaviour
                 Agent agent = selectedObject.GetComponent<Agent>();
                 agent.currentAction = null;
 
-                switch(hitPoint.transform.root.tag){
+                if(buildMode){
 
-                    case "Tree":
 
-                        agent.ChangeGoal("GetWood");
+                    if(agent.GetComponent<PlaceBlockAction>() != null){
 
-                        if(agent.GetComponent<CutTreeAction>() != null){
+                        PlaceBlockAction placeBlockAction = agent.GetComponent<PlaceBlockAction>();
+                        placeBlockAction.preCons.Clear();
 
-                            agent.GetComponent<CutTreeAction>().target = hitPoint.transform.root;
+                        placeBlockAction.target = moveToPoint.transform;
+                        placeBlockAction.blockType = blockType;
+                        placeBlockAction.preCons.Add(new State("hasTool",true));
 
-                        }
-                        break;
+                        switch(blockType){
 
-                    case "Ore":
+                            case 0:
 
-                        agent.ChangeGoal("GetOre");
+                                placeBlockAction.preCons.Add(new State("hasWood",true));
 
-                        if(agent.GetComponent<MineOreAction>() != null){
+                                break;
+                            case 1:
 
-                            agent.GetComponent<MineOreAction>().target = hitPoint.transform.root;
+                                placeBlockAction.preCons.Add(new State("hasOre",true));
+                                break;
 
-                        }
-                        break;
+                            default:
 
-                    case "Shroom":
-
-                        agent.ChangeGoal("GetShroom");
-
-                        if(agent.GetComponent<PickShroomAction>() != null){
-
-                            //Debug.Log("Selected Shroom");
-                            agent.GetComponent<PickShroomAction>().target = hitPoint.transform.root;
+                                Debug.Log("Block not selected");
+                                break;
 
                         }
 
-                        break;
+                    }
 
-                    case "Workbench":
+                    agent.ChangeGoal("PlaceBlock");
 
-                        agent.ChangeGoal("MakeTool");
+                } else {
 
-                        if(agent.GetComponent<MakeToolAction>() != null){
+                    switch(hitPoint.transform.root.tag){
 
-                            agent.GetComponent<MakeToolAction>().target = hitPoint.transform.root;
+                        case "Tree":
 
-                        }
-                        break;
+                            agent.ChangeGoal("GetWood");
 
-                    default:
+                            if(agent.GetComponent<CutTreeAction>() != null){
 
-                        //Debug.Log("[" + hitPoint.transform.root.tag + "]");
+                                agent.GetComponent<CutTreeAction>().target = hitPoint.transform.root;
 
-                        agent.ChangeGoal("MoveTo");
-                        agent.GetComponent<MoveToPointAction>().target = moveToPoint.transform;
+                            }
+                            break;
 
-                        break;
+                        case "Ore":
+
+                            agent.ChangeGoal("GetOre");
+
+                            if(agent.GetComponent<MineOreAction>() != null){
+
+                                agent.GetComponent<MineOreAction>().target = hitPoint.transform.root;
+
+                            }
+                            break;
+
+                        case "Shroom":
+
+                            agent.ChangeGoal("GetShroom");
+
+                            if(agent.GetComponent<PickShroomAction>() != null){
+
+                                //Debug.Log("Selected Shroom");
+                                agent.GetComponent<PickShroomAction>().target = hitPoint.transform.root;
+
+                            }
+
+                            break;
+
+                        case "Workbench":
+
+                            agent.ChangeGoal("MakeTool");
+
+                            if(agent.GetComponent<MakeToolAction>() != null){
+
+                                agent.GetComponent<MakeToolAction>().target = hitPoint.transform.root;
+
+                            }
+                            break;
+
+                        default:
+
+                            //Debug.Log("[" + hitPoint.transform.root.tag + "]");
+
+                            agent.ChangeGoal("MoveTo");
+                            agent.GetComponent<MoveToPointAction>().target = moveToPoint.transform;
+
+                            break;
+
+                    }
 
                 }
+
+                
 
             }
 
@@ -167,9 +210,46 @@ public class SelectionTool : MonoBehaviour
 
     }
 
+    public void OnBlockSelect(int b){
+
+        blockType = b;
+        buildMode = true;
+
+    }
+
     void OnDrawGizmos(){
 
-        Gizmos.DrawWireSphere(mousePoint,1);
+        if(buildMode){
+
+            Color color = Color.red;
+
+            switch(blockType){
+
+                case 0:
+
+                    color = Color.green;
+                    break;
+                case 1:
+                    
+                    color = Color.gray;
+                    break;
+                default:
+
+                    color = Color.red;
+                    break;
+
+            }
+
+            Vector3 roundedMousePoint = new Vector3(Mathf.RoundToInt(mousePoint.x),Mathf.RoundToInt(mousePoint.y),Mathf.RoundToInt(mousePoint.z));
+            Gizmos.color = color;
+            Gizmos.DrawWireCube(roundedMousePoint,Vector3.one);
+
+        } else {
+
+            Gizmos.color = Color.white;
+            Gizmos.DrawWireSphere(mousePoint,0.5f);
+
+        }
 
     }
 

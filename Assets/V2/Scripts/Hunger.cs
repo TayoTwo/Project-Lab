@@ -34,6 +34,12 @@ public class Hunger : MonoBehaviour
         
         agent.worldState.Find(x => x.key == "isHungry").SetValue(isHungry);
 
+        if(isHungry){
+
+            agent.ChangeGoal("EatFood");
+
+        }
+
     }
 
 }

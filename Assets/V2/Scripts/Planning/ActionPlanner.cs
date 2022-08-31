@@ -14,21 +14,15 @@ public class ActionPlanner : MonoBehaviour
 
     public Plan FindBestPlan(Goal currentGoal){
 
-        if(currentGoal == null) return null;
-
-        // Debug.Log(currentGoal);
-        // Debug.Log(currentGoal.desiredWorldState[0].key);
-        // Debug.Log(currentGoal.desiredWorldState[0].value);
+        //If theres no current goal or the desired world state is empty exit
+        if(currentGoal == null || currentGoal.desiredWorldState == null) return null;
 
         List<State> dws = currentGoal.desiredWorldState;
         
-        if(dws == null){
-
-            return null;
-
-        }
-
-        (TreeNode<PlanStep> tree, bool hasSolution) =  BuidPlanTree(new TreeNode<PlanStep>(new PlanStep(agent.currentAction,dws)));
+        //We build a plan tree and check if it has a solution
+        (TreeNode<PlanStep> tree, bool hasSolution) =  BuidPlanTree(
+                                                        new TreeNode<PlanStep>(
+                                                            new PlanStep(agent.currentAction,dws)));
 
         if(!hasSolution){
 
@@ -38,14 +32,13 @@ public class ActionPlanner : MonoBehaviour
         } else {
             
             //Debug.Log("Found Valid Tree");
+            //Convert the plan tree into a list of individual plans
             List<Plan> plans = treeToPlan(tree);
-
-            //PrintPlan(plans[0]);
-
+            
+            //Get the cheapest plan from this list and return it
             return GetCheapestPlan(plans);
 
         }
-
 
     }
 
@@ -99,7 +92,6 @@ public class ActionPlanner : MonoBehaviour
         //Loop through each plan and chechk which has the lowest total cost
         foreach(Plan plan in plans){
 
-            //PrintPlan(plan);
             if(plan.cost < bestPlan.cost){
 
                 bestPlan = plan;
@@ -130,6 +122,7 @@ public class ActionPlanner : MonoBehaviour
             }
 
         }
+
         //Loop through the possible actions and check if their effects would get us to our desired world state
         foreach(Action action in agent.getActions()){
 
@@ -167,15 +160,6 @@ public class ActionPlanner : MonoBehaviour
                     }
 
                 }
-
-                // Debug.Log("Action " + action.actionName + " is valid");
-                // Debug.Log("DWS Length: " + tempDesiredWorldState.Count);
-
-                // foreach(State s in tempDesiredWorldState){
-
-                //     Debug.Log("States left " + s.key);
-
-                // }
                 
                 //We run this function recursively to check what other actions we need before we can complete this desired world state
                 (TreeNode<PlanStep> branch, bool branchHasSolution) = BuidPlanTree(

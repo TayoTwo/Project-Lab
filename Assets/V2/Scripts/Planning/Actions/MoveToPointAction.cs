@@ -14,7 +14,7 @@ public class MoveToPointAction : Action
         needsInRange = true;
         e.Add(new State("hasMovedTo",true));
 
-        actionName = "MoveTo";
+        actionName = "MoveToPoint";
         preCons = p;
         effects = e;
 
@@ -48,7 +48,8 @@ public class MoveToPointAction : Action
         if(allConditionsMet){
 
             agent.worldState.Find(x => x.key == "hasMovedTo").SetValue(false);
-
+            busy = false;
+            
         }
 
         return allConditionsMet;

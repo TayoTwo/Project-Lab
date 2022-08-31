@@ -80,7 +80,7 @@ public class MineOreAction : Action
 
     }
 
-    public override bool isValid(){
+    public override bool isValid(Agent agent){
         
         if(GameObject.FindGameObjectsWithTag("Ore").Length == 0) return false;
 

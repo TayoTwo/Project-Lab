@@ -19,8 +19,8 @@ public class WorldSetter : MonoBehaviour
 
             for(int j = 0; j < prefabAmount[i];j++){
 
-                float spawnPosX = gridManager.gridDim.x * gridManager.unitLength * Random.value;
-                float spawnPosY = gridManager.gridDim.x * gridManager.unitLength * Random.value;
+                float spawnPosX = (gridManager.gridDim.x - 1) * gridManager.unitLength * Random.value;
+                float spawnPosY = (gridManager.gridDim.y - 1) * gridManager.unitLength * Random.value;
 
                 Vector3 spawnPos = new Vector3(spawnPosX,0,spawnPosY) - gridManager.offset;
 

@@ -34,6 +34,8 @@ public class Agent : MonoBehaviour
     public GridManager gridManager;
     public Backpack backpack;
     public Hunger hunger;
+    Agent caller;
+
     ActionPlanner actionPlanner;
     NavMeshAgent navMeshAgent;
     AnimationController animationController;
@@ -46,6 +48,7 @@ public class Agent : MonoBehaviour
         actionPlanner = GetComponent<ActionPlanner>();
         animationController = GetComponent<AnimationController>();
         backpack = GetComponent<Backpack>();
+        hunger = GetComponent<Hunger>();
 
         //Set actions by looking through components
         //Set goals
@@ -123,7 +126,7 @@ public class Agent : MonoBehaviour
         //Make a list of valid goals
         foreach(Goal g in goals){
 
-            if(g.isValid(worldState)){
+            if(g.isValid(this)){
 
                 validGoals.Add(g);
 
@@ -165,7 +168,7 @@ public class Agent : MonoBehaviour
 
         navMeshAgent.isStopped = true;
 
-        if(currentGoal == null || !currentGoal.isValid(worldState)){
+        if(currentGoal == null || !currentGoal.isValid(this)){
 
             currentGoal = GetBestGoal();
 
@@ -173,7 +176,7 @@ public class Agent : MonoBehaviour
 
         isIdle = (currentGoal == null) ? true : false;
 
-        if(currentGoal != null || currentAction == null || !currentAction.isValid()){
+        if(currentGoal != null || currentAction == null || !currentAction.isValid(this)){
 
             plan = actionPlanner.FindBestPlan(currentGoal);
 
@@ -216,7 +219,7 @@ public class Agent : MonoBehaviour
         navMeshAgent.isStopped = false;
         navMeshAgent.SetDestination(currentAction.target.position);
 
-        if(currentAction.needsRangeCheck() && currentAction.target == null){
+        if(currentAction.needsRangeCheck() && (currentAction.target == null || !currentAction.isValid(this))){
 
             agentState = AgentState.IDLE;
             Debug.Log("TARGET IS NULL");
@@ -275,49 +278,76 @@ public class Agent : MonoBehaviour
             plan = null;
             currentPlanStep = 0;
             agentState = AgentState.IDLE;
+            return;
 
         }
 
-        if(!currentAction.isValid()){
+        if(!currentAction.isValid(this)){
 
             agentState = AgentState.IDLE;
             return;
 
         }
 
+        if(currentAction.needsInRange  && !isWithinRange(currentAction.target.position)){
+
+            agentState = AgentState.MOVETO;
+
+        }
+
+
     }
+    
     void SignalState(){
 
         //Debug.Log("SIGNALING");
 
         List<State> statesToComplete = new List<State>(currentGoal.desiredWorldState);
         
-        //Loop through the possible actions and check if their effects would get us to our desired world state
-        foreach(Action action in actions){
+        //Loop through our states to complete and find what preconditions need to be added
+        for(int i = 0;i < statesToComplete.Count;i++){
 
-            List<State> effects = action.getEffects();
-            //If the action's effects match our desired world state then remove it to check what else needs to be satisfied
-            //We also mark the current action as needed in the plan
-            foreach(State state in statesToComplete.ToArray()){
+            State s = statesToComplete[i];
 
-                if(!effects.Exists(x => x.key == state.key)) continue;
+            if(worldState.Find(x => x.key == s.key).value.Equals(s.value)){
 
-                if(effects.Exists(x => x.key == state.key) && effects.Find(x => x.key == state.key).value.Equals(state.value)){
+                continue;
 
-                    //Debug.Log("HELLO");
-                    statesToComplete.Remove(state);
-                    List<State> preCons = action.getPrecons();
+            }
 
-                    foreach(State s in preCons){
+            //If an action can help our states to complete add its preconditions
+            foreach(Action action in actions){
 
-                        //Debug.Log(state.key + "-" + state.value);
-                        statesToComplete.Add(s);
+                List<State> preCons = action.getPrecons();
+                List<State> effects = action.getEffects();
+
+                if(effects.Exists(x => x.key == s.key) && effects.Find(x => x.key == s.key).value.Equals(s.value)){
+                    //Debug.Log("ACTION IS VALID AND HAS PRECON COUNT " + preCons.Count);
+                    statesToComplete.Remove(s);
+
+                    foreach(State p in preCons){
+
+                        if(!statesToComplete.Exists(x => x.key == p.key)){
+
+                            //Debug.Log("ADDED PRECON " + p.key);
+                            statesToComplete.Add(p);
+
+
+                        }
 
                     }
 
+                    //Debug.Log("RESTARTING LOOP");
+                    i = -1;
+
                 }
- 
-            }   
+
+
+
+            }
+
+            //Debug.Log("STATES TO COMPLETE " + statesToComplete.Count);
+
 
         }
 
@@ -338,32 +368,38 @@ public class Agent : MonoBehaviour
 
         }
 
+        //Debug.Log("B STATES TO COMPLETE " + gameObject.name + " " + statesToComplete.Count);
         foreach(State state in statesToComplete.ToArray()){
 
-            if(worldState.Find(x => x.key == state.key).value.Equals(state.value)){
+            if(worldState.Find(x => x.key == state.key).value == state.value){
 
                 statesToComplete.Remove(state);
 
             } else {
 
-                //Debug.Log("NEED TO COMPELTE" + state.key);
+                //Debug.Log("NEED TO COMPELTE " + state.key + " VALUE IS " + state.value);
+                //Debug.Log("VALUE IS CURRENTLY " + worldState.Find(x => x.key == state.key).key + " VALUE IS " + worldState.Find(x => x.key == state.key).value);
 
             }
 
         }
 
-        //Debug.Log("STATES TO COMPLETE " + gameObject.name + " " + statesToComplete.Count);
+        //Debug.Log("A STATES TO COMPLETE " + gameObject.name + " " + statesToComplete.Count);
+        // Debug.Log(statesToComplete[0].key);
+        // Debug.Log(statesToComplete[1].key);
         
         if(statesToComplete.Count == 0){
 
+            Debug.Log("SIGNAL HAS BEEN SATISFIED");
             agentState = AgentState.IDLE;
 
-            // foreach((Agent,bool) h in helpers){
+            // foreach(Agent h in helpers){
 
-            //     h.Item1.RespondToSignal(statesToComplete,this);
+            //     UpdateRespondee(this);
 
             // }
 
+            statesToComplete.Clear();
             return;
 
         }
@@ -374,9 +410,14 @@ public class Agent : MonoBehaviour
 
     }
 
-    public (List<State> , bool) RespondToSignal(List<State> statesToComplete, Agent caller){
+    public (List<State> , bool) RespondToSignal(List<State> statesToComplete, Agent c){
+
+        caller = c;
 
         //Debug.Log(caller.name + " " + caller.agentState);
+        
+        //If the current goal has a higher priority ignore the signal
+        if(currentGoal != null && currentGoal.priority > goals.Find(x => x.goalName =="Help").priority) return (statesToComplete,false);
 
         if(caller.agentState != AgentState.SIGNAL) {
 
@@ -460,7 +501,7 @@ public class Agent : MonoBehaviour
 
     public void ChangeGoal(string goalName){
 
-        if(!goals.Find(x => x.goalName == goalName).isValid(worldState)) return;
+        if(!goals.Find(x => x.goalName == goalName).isValid(this)) return;
 
         currentGoal = goals.Find(x => x.goalName == goalName);
 

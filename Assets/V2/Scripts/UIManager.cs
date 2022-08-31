@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -12,11 +13,14 @@ public class UIManager : MonoBehaviour
     public TMP_Text currentAction;
     public TMP_Dropdown actionDropdown;
     public SelectionTool selectionTool;
+    public Button woodButton;
+    public Button oreButton;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    void Start(){
+
+        //woodButton.onClick.AddListener(delegate{selectionTool.OnBlockSelect(0);});
+        //oreButton.onClick.AddListener(delegate{selectionTool.OnBlockSelect(1);});
+
     }
 
     // Update is called once per frame
@@ -34,18 +38,9 @@ public class UIManager : MonoBehaviour
 
         agentName.text = selectedAgent.gameObject.name;
 
-        if(selectedAgent.currentGoal == null || selectedAgent.currentAction == null){
-
-            currentGoal.text = "Current Goal: None";
-            currentAction.text = "Current Action: None";
-
-        } else {
-
-            currentGoal.text = "Current Goal: " + selectedAgent.currentGoal.goalName;
-            currentAction.text = "Current Action: " + selectedAgent.currentAction.actionName;
-
-        }
-
+        currentGoal.text = (selectedAgent.currentGoal == null)   ? "Current Goal: None" : "Current Goal: " + selectedAgent.currentGoal.goalName;
+        currentAction.text = (selectedAgent.currentAction == null)   ? "Current Action: None" : "Current Action: " + selectedAgent.currentAction.actionName;
+        
         //Availible Actions
 
         actionDropdown.ClearOptions();

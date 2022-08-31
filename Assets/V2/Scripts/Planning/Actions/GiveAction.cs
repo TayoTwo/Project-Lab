@@ -31,19 +31,43 @@ public class GiveAction : Action
 
             foreach(State state in preCons){
 
-                if(state.key == "hasWood"  && agent.backpack.wood > 0){
+                switch(state.key){
 
-                    agent.backpack.wood--;
-                    reciever.wood++;
-                    agent.worldState.Find(x => x.key == "hasHelped").SetValue(true);
+                    case "hasWood":
 
-                }
+                        if(agent.backpack.wood > 0){
 
-                if(state.key == "hasOre" && agent.backpack.ore > 0){
+                            agent.backpack.wood--;
+                            reciever.wood++;
+                            agent.worldState.Find(x => x.key == "hasHelped").SetValue(true);
 
-                    agent.backpack.ore--;
-                    reciever.ore++;
-                    agent.worldState.Find(x => x.key == "hasHelped").SetValue(true);
+                        }
+
+                        break;
+
+                    case "hasOre":
+
+                        if(agent.backpack.ore > 0){
+
+                            agent.backpack.ore--;
+                            reciever.ore++;
+                            agent.worldState.Find(x => x.key == "hasHelped").SetValue(true);
+
+                        }
+
+                        break;
+
+                    case "hasShrooms":
+
+                        if(agent.backpack.shrooms > 0){
+
+                            agent.backpack.shrooms--;
+                            reciever.shrooms++;
+                            agent.worldState.Find(x => x.key == "hasHelped").SetValue(true);
+
+                        }
+
+                        break;
 
                 }
 
@@ -54,10 +78,14 @@ public class GiveAction : Action
         busy = false;
 
     }
+    public override bool isValid(Agent agent){
 
-    public override bool isValid(){
+        if(target == null || target.GetComponent<Agent>().agentState != AgentState.SIGNAL){
 
-        if(target == null) return false;
+            target = null;
+            return false;
+
+        } 
 
         return true;
 
@@ -83,6 +111,8 @@ public class GiveAction : Action
 
             target = null;
             preCons.Clear();
+            agent.worldState.Find(x => x.key == "hasHelped").SetValue(false);
+            busy = false;
 
         }
 

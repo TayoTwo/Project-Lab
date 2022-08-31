@@ -19,17 +19,31 @@ public class Goal : ScriptableObject
 
     }
 
-    public bool isValid(List<State> worldState){
+    public bool isValid(Agent agent){
 
         bool valid = true;
 
         foreach(State s in desiredWorldState){
 
-            if(worldState.Find(x => x.key == s.key).value == s.value){
+            if(agent.worldState.Find(x => x.key == s.key).value == s.value){
 
                 valid = false;
 
             }
+
+        }
+
+        switch(goalName){
+
+            case "Help":
+
+                if(agent.GetComponent<GiveAction>().target == null){
+
+                    valid = false;
+
+                }
+
+                break;
 
         }
 

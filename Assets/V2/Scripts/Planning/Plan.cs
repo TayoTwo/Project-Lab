@@ -8,11 +8,6 @@ public class Plan {
     public List<Action> actions;
     public int cost;
 
-    public Plan(){
-
-        
-    }
-
     public Plan(List<Action> a,int c){
 
         actions = a;

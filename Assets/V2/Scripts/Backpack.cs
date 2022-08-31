@@ -20,6 +20,10 @@ public class Backpack : MonoBehaviour
 
     void Update(){
 
+        wood = Mathf.Clamp(wood,0,1);
+        ore = Mathf.Clamp(ore,0,1);
+        shrooms = Mathf.Clamp(shrooms,0,1);
+
         if(wood > 0){
 
             agent.worldState.Find(x => x.key == "hasWood").SetValue(true);
@@ -42,11 +46,11 @@ public class Backpack : MonoBehaviour
 
         if(shrooms > 0){
 
-            agent.worldState.Find(x => x.key == "hasShroom").SetValue(true);
+            agent.worldState.Find(x => x.key == "hasShrooms").SetValue(true);
 
         } else {
 
-            agent.worldState.Find(x => x.key == "hasShroom").SetValue(false);
+            agent.worldState.Find(x => x.key == "hasShrooms").SetValue(false);
 
         }
 

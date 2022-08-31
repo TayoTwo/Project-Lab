@@ -27,7 +27,7 @@ public class Action : MonoBehaviour
 
     }
 
-    public virtual int getCost(List<State> worldState,Agent npc){
+    public virtual int getCost(List<State> worldState,Agent agent){
 
         return cost;
 
@@ -39,7 +39,7 @@ public class Action : MonoBehaviour
 
     }
 
-    public virtual bool isValid(){
+    public virtual bool isValid(Agent agent){
 
         return true;
 

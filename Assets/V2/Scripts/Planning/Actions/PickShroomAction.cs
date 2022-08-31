@@ -10,7 +10,7 @@ public class PickShroomAction : Action
         List<State> p = new List<State>();
         List<State> e = new List<State>();
         needsInRange = true;
-        e.Add(new State("hasShroom",true));
+        e.Add(new State("hasShrooms",true));
 
         actionName = "PickShroom";
         preCons = p;
@@ -80,7 +80,7 @@ public class PickShroomAction : Action
 
     }
 
-    public override bool isValid(){
+    public override bool isValid(Agent agent){
         
         if(GameObject.FindGameObjectsWithTag("Shroom").Length == 0) return false;
 

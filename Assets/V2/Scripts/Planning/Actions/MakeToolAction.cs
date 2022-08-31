@@ -86,7 +86,7 @@ public class MakeToolAction : Action
 
     }
 
-    public override bool isValid(){
+    public override bool isValid(Agent agent){
         
         if(GameObject.FindGameObjectsWithTag("Workbench").Length == 0) return false;
 
@@ -104,17 +104,7 @@ public class MakeToolAction : Action
 
         StartCoroutine(MakeTool(agent));
 
-        bool allConditionsMet = true;
-
-        foreach(State state in getEffects()){
-
-            if(!agent.worldState.Find(x => x.key == state.key).value.Equals(state.value)){
-
-                allConditionsMet = false;
-
-            }
-
-        }
+        base.perform(agent);
 
         return allConditionsMet;
 
