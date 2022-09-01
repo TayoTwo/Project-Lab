@@ -7,8 +7,11 @@ using UnityEngine;
 public class Goal : ScriptableObject
 {
 
+    //Name of the goal
     public string goalName;
+    //Priority of the goal
     public int priority;
+    //The goal's desired world state
     [SerializeField]
     public List<State> desiredWorldState;
 
@@ -46,8 +49,6 @@ public class Goal : ScriptableObject
                 break;
 
         }
-
-        //Debug.Log(goalName + " is " + valid);
 
         return valid;
 

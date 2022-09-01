@@ -42,29 +42,9 @@ public class CutTreeAction : Action
 
     }
 
-    public override int getCost(List<State> worldState,Agent agent){
-
-        if(GameObject.FindGameObjectsWithTag("Tree").Length > 0){
-
-            UpdateClosestTree(agent);
-            return agent.gridManager.CalculateCost(agent.transform.position,target.position);
-
-        } else {
-
-            return 0;
-
-        }
-
-    }
-
     IEnumerator CutTree(Agent agent){
 
-        //Perform action
-        //Find nearest tree
-        //Set tree as target
-        //Destroy tree
-        //Add resource to inventory
-
+        //If we are alreay doing this action exit
         if(busy) yield break;
 
         if(target == null) {
@@ -75,19 +55,38 @@ public class CutTreeAction : Action
         } 
 
         busy = true;
-
+        //Delay this action to allow animations to play
         yield return new WaitForSeconds(1.433f);
 
         if(agent.isWithinRange(target.position)){
 
-            //Debug.Log("DESTROYING");
             agent.backpack.wood++;
             Destroy(target.root.gameObject);
 
         }
 
-
         busy = false;
+
+    }
+
+    public override int getCost(List<State> worldState,Agent agent){
+
+        //If a tree hasn't been selected and there are trees in the scene calculate the cost to the nearest tree
+        if(target == null && GameObject.FindGameObjectsWithTag("Tree").Length > 0){
+
+            UpdateClosestTree(agent);
+            return agent.gridManager.CalculateCost(agent.transform.position,target.position);
+
+        //Calculate the cost to the selected tree
+        } else if(target != null){
+
+            return agent.gridManager.CalculateCost(agent.transform.position,target.position);
+
+        } else {
+
+            return 0;
+
+        }
 
     }
 

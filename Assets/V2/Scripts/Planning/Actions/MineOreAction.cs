@@ -39,20 +39,7 @@ public class MineOreAction : Action
 
     }
 
-    public override int getCost(List<State> worldState,Agent agent){
 
-        if(GameObject.FindGameObjectsWithTag("Ore").Length > 0){
-
-            UpdateClosestOre(agent);
-            return agent.gridManager.CalculateCost(agent.transform.position,target.position);
-
-        } else {
-
-            return 0;
-
-        }
-
-    }
     
     IEnumerator MineOre(Agent agent){
     
@@ -88,13 +75,22 @@ public class MineOreAction : Action
 
     }
 
-    public override bool perform(Agent agent){
+    public override int getCost(List<State> worldState,Agent agent){
 
-        //Perform action
-        //Find nearest tree
-        //Set tree as target
-        //Destroy tree
-        //Add resource to inventory
+        if(GameObject.FindGameObjectsWithTag("Ore").Length > 0){
+
+            UpdateClosestOre(agent);
+            return agent.gridManager.CalculateCost(agent.transform.position,target.position);
+
+        } else {
+
+            return 0;
+
+        }
+
+    }
+
+    public override bool perform(Agent agent){
 
         StartCoroutine(MineOre(agent));
 
@@ -103,4 +99,5 @@ public class MineOreAction : Action
         return allConditionsMet;
 
     }
+    
 }

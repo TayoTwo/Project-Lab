@@ -24,6 +24,7 @@ public class Backpack : MonoBehaviour
         ore = Mathf.Clamp(ore,0,1);
         shrooms = Mathf.Clamp(shrooms,0,1);
 
+        //Update the hasWood state
         if(wood > 0){
 
             agent.worldState.Find(x => x.key == "hasWood").SetValue(true);
@@ -34,6 +35,7 @@ public class Backpack : MonoBehaviour
 
         }
 
+        //Update the hasOre state
         if(ore > 0){
 
             agent.worldState.Find(x => x.key == "hasOre").SetValue(true);
@@ -43,7 +45,7 @@ public class Backpack : MonoBehaviour
             agent.worldState.Find(x => x.key == "hasOre").SetValue(false);
 
         }
-
+        //Update the hasShrooms state
         if(shrooms > 0){
 
             agent.worldState.Find(x => x.key == "hasShrooms").SetValue(true);
@@ -54,6 +56,7 @@ public class Backpack : MonoBehaviour
 
         }
 
+        //Update the hasTool state and move the tool to the correct position on the model
         if(tool != null){
 
             tool.transform.parent = handSlot;

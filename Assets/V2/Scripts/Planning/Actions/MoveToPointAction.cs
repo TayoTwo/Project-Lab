@@ -29,12 +29,6 @@ public class MoveToPointAction : Action
 
     public override bool perform(Agent agent){
 
-        //Perform action
-        //Find nearest tree
-        //Set tree as target
-        //Destroy tree
-        //Add resource to inventory
-
         if(agent.isWithinRange(target.position)){
 
             agent.worldState.Find(x => x.key == "hasMovedTo").SetValue(true);

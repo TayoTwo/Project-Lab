@@ -34,8 +34,6 @@ public class EatAction : Action
         agent.backpack.shrooms--;
         agent.hunger.hunger = 1;
 
-        //Debug.Log("EATING");
-
         busy = false;
 
     }
@@ -57,4 +55,5 @@ public class EatAction : Action
         return allConditionsMet;
 
     }
+
 }
