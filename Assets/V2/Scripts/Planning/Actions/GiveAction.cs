@@ -34,39 +34,27 @@ public class GiveAction : Action
                 switch(state.key){
 
                     case "hasWood":
-
                         if(agent.backpack.wood > 0){
-
                             agent.backpack.wood--;
                             reciever.wood++;
                             agent.worldState.Find(x => x.key == "hasHelped").SetValue(true);
-
                         }
-
                         break;
 
                     case "hasOre":
-
                         if(agent.backpack.ore > 0){
-
                             agent.backpack.ore--;
                             reciever.ore++;
                             agent.worldState.Find(x => x.key == "hasHelped").SetValue(true);
-
                         }
-
                         break;
 
                     case "hasShrooms":
-
                         if(agent.backpack.shrooms > 0){
-
                             agent.backpack.shrooms--;
                             reciever.shrooms++;
                             agent.worldState.Find(x => x.key == "hasHelped").SetValue(true);
-
                         }
-
                         break;
 
                 }
@@ -78,6 +66,7 @@ public class GiveAction : Action
         busy = false;
 
     }
+
     public override bool isValid(Agent agent){
 
         if(target == null || target.GetComponent<Agent>().agentState != AgentState.SIGNAL){

@@ -7,10 +7,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 651658774342821539, guid: d1e0d30410766ca43a3d2976a49754c5,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: be302ae6f92851e4c87b93ac7adba820, type: 2}
+    - target: {fileID: 685011290282095009, guid: d1e0d30410766ca43a3d2976a49754c5,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: be302ae6f92851e4c87b93ac7adba820, type: 2}
+    - target: {fileID: 7166516923235204012, guid: d1e0d30410766ca43a3d2976a49754c5,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: be302ae6f92851e4c87b93ac7adba820, type: 2}
     - target: {fileID: 8346689979097621835, guid: d1e0d30410766ca43a3d2976a49754c5,
         type: 3}
       propertyPath: m_Name
-      value: Miner
+      value: Miner Variant
       objectReference: {fileID: 0}
     - target: {fileID: 8346689979097621835, guid: d1e0d30410766ca43a3d2976a49754c5,
         type: 3}
@@ -93,6 +108,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: ee689a0dfcff00c48bb8bf99ed05c9a4,
         type: 2}
+    - target: {fileID: 8806974131094052391, guid: d1e0d30410766ca43a3d2976a49754c5,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: be302ae6f92851e4c87b93ac7adba820, type: 2}
     m_RemovedComponents:
     - {fileID: 2488741394234807333, guid: d1e0d30410766ca43a3d2976a49754c5, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d1e0d30410766ca43a3d2976a49754c5, type: 3}
@@ -123,3 +143,4 @@ MonoBehaviour:
   - key: hasOre
     value: 1
   busy: 0
+  allConditionsMet: 1

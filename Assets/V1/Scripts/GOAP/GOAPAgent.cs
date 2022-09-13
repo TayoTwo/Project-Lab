@@ -72,22 +72,19 @@ public class GOAPAgent : MonoBehaviour
 
         //If the plan is empty then find a new plan
         //If the current goal is not the best goal or the current goal/action is invalid then change the plan
-        if(plan is null){
+        if(plan is null 
+        || plan.actions.Count == 0
+        || currentGoal != bestGoal 
+        || !currentGoal.isValid(this) 
+        || !currentAction.isValid(this)){
 
-            if(plan.actions.Count == 0
-            || currentGoal != bestGoal 
-            || !currentGoal.isValid(this) 
-            || !currentAction.isValid(this)){
+            currentGoal = bestGoal;
+            plan = actionPlanner.FindBestPlan(currentGoal);
+            currentPlanStep = 0;
+            currentAction = plan.actions[currentPlanStep];
 
-                currentGoal = bestGoal;
-                plan = actionPlanner.FindBestPlan(currentGoal);
-                currentPlanStep = 0;
-                currentAction = plan.actions[currentPlanStep];
+            return;
 
-                return;
-
-            }
-            
         }
 
         FollowPlan();
@@ -150,6 +147,15 @@ public class GOAPAgent : MonoBehaviour
 
             currentPlanStep++;
             currentAction = plan.actions[currentPlanStep];
+
+        } else if(stepComplete && currentPlanStep >= plan.actions.Count - 1){
+
+            Debug.Log("PLAN COMPLETE");
+            currentGoal = null;
+            currentAction = null;
+            plan = null;
+            currentPlanStep = 0;
+            return;
 
         }
 

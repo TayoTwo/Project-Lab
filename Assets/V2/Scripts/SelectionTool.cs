@@ -9,6 +9,8 @@ public class SelectionTool : MonoBehaviour
     public Vector3 mousePoint;
     public UIManager uIManager;
     public GameObject actionPanel;
+    public GameObject worldStatePanel;
+    public GameObject blockPanel;
     public int goalIndex;
     public List<Goal> goals;
     public bool buildMode;
@@ -24,6 +26,8 @@ public class SelectionTool : MonoBehaviour
         inputMaster.Player.LeftClick.performed += ctx => OnLeftClick();
         inputMaster.Player.RightClick.performed += ctx => OnRightClick();
         actionPanel.SetActive(false);
+        worldStatePanel.SetActive(false);
+        blockPanel.SetActive(false);
 
     }
 
@@ -66,18 +70,26 @@ public class SelectionTool : MonoBehaviour
         if(Physics.Raycast(ray,out hitPoint)){
 
             hitObject = hitPoint.transform.root;
-            //Debug.Log("Hit " + hitObject.name);
 
             selectedObject = hitObject.gameObject;
 
             if(selectedObject.GetComponent<Agent>() != null){
 
                 actionPanel.SetActive(true);
+                worldStatePanel.SetActive(true);
+
+                if(selectedObject.GetComponent<PlaceBlockAction>() != null){
+
+                    blockPanel.SetActive(true);
+
+                }
 
             } else {
 
                 buildMode = false;
                 actionPanel.SetActive(false);
+                worldStatePanel.SetActive(false);
+                //blockPanel.SetActive(false);
 
             }
 

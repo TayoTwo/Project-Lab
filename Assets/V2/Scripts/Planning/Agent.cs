@@ -4,12 +4,10 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public enum AgentState {
-
     IDLE,
     MOVETO,
     PERFORM,
     SIGNAL
-
 }
 
 public class Agent : MonoBehaviour
@@ -134,8 +132,6 @@ public class Agent : MonoBehaviour
 
         }
 
-        //Debug.Log("Valid GOALS " + validGoals.Count);
-
         if(validGoals.Count == 0){
 
             Debug.Log("NO VALID GOALS");
@@ -164,24 +160,27 @@ public class Agent : MonoBehaviour
     //Essentially the plan maker
     void IdleState(){
 
-        //Debug.Log(gameObject.name + " IDLING");
 
         navMeshAgent.isStopped = true;
 
+        //Find the best goal
         if(currentGoal == null || !currentGoal.isValid(this)){
 
             currentGoal = GetBestGoal();
 
         }
 
+        //If we still can't find a goal then idle
         isIdle = (currentGoal == null) ? true : false;
 
+        //Find a plan for the current goal or replan if the current action is invalid
         if(currentGoal != null || currentAction == null || !currentAction.isValid(this)){
 
             plan = actionPlanner.FindBestPlan(currentGoal);
 
         }
 
+        //Run the plan
         if(plan != null && plan.actions.Count != 0){
 
             currentPlanStep = 0;
@@ -200,14 +199,13 @@ public class Agent : MonoBehaviour
 
             }
 
+        //If we can't fullfull our goal then signal for help
         } else if(!isIdle){
 
             agentState = AgentState.SIGNAL;
             return;
 
         }
-
-
 
     }
 
@@ -227,15 +225,13 @@ public class Agent : MonoBehaviour
 
         }
 
-        if(isWithinRange(currentAction.target.position)){
+        if(isWithinRange(currentAction.target.position) || !currentAction.needsRangeCheck()){
 
             agentState = AgentState.PERFORM;
             //Debug.Log("IN RANGE TO PERFORM");
             return;
 
         }
-
-        //NavMesh move too
 
     }
 
@@ -252,13 +248,6 @@ public class Agent : MonoBehaviour
             return;
 
         }
-
-        // if(currentAction.needsRangeCheck() && currentAction.target != null && !isWithinRange(currentAction.target.position)){
-
-        //     agentState = AgentState.MOVETO;
-        //     return;
-
-        // }
 
         //Until the action has been complete continue to do it
         bool stepComplete = currentAction.perform(this);
@@ -281,7 +270,7 @@ public class Agent : MonoBehaviour
             return;
 
         }
-
+        
         if(!currentAction.isValid(this)){
 
             agentState = AgentState.IDLE;
@@ -294,7 +283,6 @@ public class Agent : MonoBehaviour
             agentState = AgentState.MOVETO;
 
         }
-
 
     }
     
@@ -342,18 +330,14 @@ public class Agent : MonoBehaviour
 
                 }
 
-
-
             }
-
-            //Debug.Log("STATES TO COMPLETE " + statesToComplete.Count);
 
 
         }
 
         GameObject[] agents = GameObject.FindGameObjectsWithTag("Agent");
         List<(Agent,bool)> helpers = new List<(Agent,bool)>();
-
+        //Find all agents that can help
         foreach(GameObject a in agents){
 
             if(a == gameObject) continue;
@@ -367,46 +351,28 @@ public class Agent : MonoBehaviour
             helpers.Add((agentComp,canHelp));
 
         }
-
-        //Debug.Log("B STATES TO COMPLETE " + gameObject.name + " " + statesToComplete.Count);
+        //Remove an item from our to-do list if our worldstate is satisfied
         foreach(State state in statesToComplete.ToArray()){
 
             if(worldState.Find(x => x.key == state.key).value == state.value){
 
                 statesToComplete.Remove(state);
 
-            } else {
-
-                //Debug.Log("NEED TO COMPELTE " + state.key + " VALUE IS " + state.value);
-                //Debug.Log("VALUE IS CURRENTLY " + worldState.Find(x => x.key == state.key).key + " VALUE IS " + worldState.Find(x => x.key == state.key).value);
-
-            }
+            } 
 
         }
-
-        //Debug.Log("A STATES TO COMPLETE " + gameObject.name + " " + statesToComplete.Count);
-        // Debug.Log(statesToComplete[0].key);
-        // Debug.Log(statesToComplete[1].key);
-        
+        //If our to-do list is empty then we've completed our goal
         if(statesToComplete.Count == 0){
 
             Debug.Log("SIGNAL HAS BEEN SATISFIED");
             agentState = AgentState.IDLE;
-
-            // foreach(Agent h in helpers){
-
-            //     UpdateRespondee(this);
-
-            // }
 
             statesToComplete.Clear();
             return;
 
         }
 
-        //REQUEST FOR OTHER AGENTS TO FILL REQUEST
-        //ASKS AGENTS THAT CAN RESPOND TO REQUEST TO CHANGE THEIR GOAL TO 'RespondToRequest'
-        //THIS IS COMPLETED BY COMPLETING AS MANY OF THE ASKERS WORLD STATE
+
 
     }
 
@@ -414,8 +380,6 @@ public class Agent : MonoBehaviour
 
         caller = c;
 
-        //Debug.Log(caller.name + " " + caller.agentState);
-        
         //If the current goal has a higher priority ignore the signal
         if(currentGoal != null && currentGoal.priority > goals.Find(x => x.goalName =="Help").priority) return (statesToComplete,false);
 
@@ -436,10 +400,8 @@ public class Agent : MonoBehaviour
         foreach(Action action in actions){
 
             List<State> effects = action.getEffects();
-            //Debug.Log(action.actionName + ":" + effects.Count);
 
             //If the action's effects match our desired world state then remove it to check what else needs to be satisfied
-            //We also mark the current action as needed in the plan
             foreach(State state in statesToComplete.ToArray()){
 
                 //Debug.Log(state.key + "-" + state.value);
@@ -461,11 +423,11 @@ public class Agent : MonoBehaviour
         if(canHelp){
 
             //Change the responders goal and create a new plan
+            currentGoal = goals.Find(x => x.goalName == "Help");
+
             currentAction = GetComponent<GiveAction>();
             currentAction.preCons = toDoList;
             currentAction.target = caller.transform;
-
-            currentGoal = goals.Find(x => x.goalName == "Help");
 
             agentState = AgentState.IDLE;
 

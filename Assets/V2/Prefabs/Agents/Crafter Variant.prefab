@@ -11,6 +11,21 @@ PrefabInstance:
       propertyPath: actionName
       value: MoveToPoint
       objectReference: {fileID: 0}
+    - target: {fileID: 651658774342821539, guid: d1e0d30410766ca43a3d2976a49754c5,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e5df149314546fc4c8f95c6bd01aa9c3, type: 2}
+    - target: {fileID: 685011290282095009, guid: d1e0d30410766ca43a3d2976a49754c5,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e5df149314546fc4c8f95c6bd01aa9c3, type: 2}
+    - target: {fileID: 7166516923235204012, guid: d1e0d30410766ca43a3d2976a49754c5,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e5df149314546fc4c8f95c6bd01aa9c3, type: 2}
     - target: {fileID: 8346689979097621810, guid: d1e0d30410766ca43a3d2976a49754c5,
         type: 3}
       propertyPath: handSlot
@@ -19,7 +34,7 @@ PrefabInstance:
     - target: {fileID: 8346689979097621835, guid: d1e0d30410766ca43a3d2976a49754c5,
         type: 3}
       propertyPath: m_Name
-      value: Crafter
+      value: Crafter Variant
       objectReference: {fileID: 0}
     - target: {fileID: 8346689979097621835, guid: d1e0d30410766ca43a3d2976a49754c5,
         type: 3}
@@ -112,6 +127,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: ee689a0dfcff00c48bb8bf99ed05c9a4,
         type: 2}
+    - target: {fileID: 8806974131094052391, guid: d1e0d30410766ca43a3d2976a49754c5,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e5df149314546fc4c8f95c6bd01aa9c3, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d1e0d30410766ca43a3d2976a49754c5, type: 3}
 --- !u!114 &4589773391395346484 stripped
@@ -157,6 +177,7 @@ MonoBehaviour:
   - key: hasTool
     value: 1
   busy: 0
+  allConditionsMet: 1
   tool: {fileID: 2466397357022761591, guid: d64370ebb071f054489e57c89ba01632, type: 3}
 --- !u!4 &5242846452376342964 stripped
 Transform:
