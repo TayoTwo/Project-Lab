@@ -1,22 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class Action : MonoBehaviour
 {
     public string actionName;
     public int cost;
-    public string data;
+    public Transform target;
+    public bool needsInRange;
     public List<State> preCons;
     public List<State> effects;
-
-    public Action(string name, List<State> pre,List<State> eff){
-
-        actionName = name;
-        preCons = pre;
-        effects = eff;
-
-    }
+    public bool busy;
+    public bool allConditionsMet = true;
 
     public List<State> getPrecons(){
 
@@ -30,55 +27,40 @@ public class Action : MonoBehaviour
 
     }
 
-    public int getCost(List<State> worldState,NPCController npc){
+    public bool needsRangeCheck(){
 
-        //Depending on the action calculate the action cost differently
-        string[] actionParts = actionName.Split('|');
-        string prefix = actionParts[0];
-        string suffix = actionParts[1];
-        Debug.Log(suffix);
+        return needsInRange;
 
-        switch(prefix){
+    }
 
-            case "MoveTo":
-                string[] locationParts = suffix.Split(',');
-                Vector3 location = new Vector3(float.Parse(locationParts[0]), float.Parse(locationParts[1]),float.Parse(locationParts[2]));
+    public virtual int getCost(List<State> worldState,Agent agent){
 
-                //Most likely doesn't work rn
+        return cost;
 
-                return npc.pathFinder.CalculateCost(npc.transform.position,location);;
-            case "Find":
+    }
 
-                GameObject[] targets = GameObject.FindGameObjectsWithTag(suffix);
+    public virtual bool isValid(Agent agent){
 
-                Vector3 closest = targets[0].transform.position;
+        return true;
 
-                //Find the closest one
-                foreach(GameObject s in targets){
+    }
 
-                    float sDistance = Vector3.Distance(transform.position,s.transform.position);
-                    float cDistance = Vector3.Distance(transform.position,closest);
+    public virtual bool perform(Agent agent){
 
-                    if(sDistance < cDistance){
+        allConditionsMet = true;
 
-                        closest = s.transform.position;
+        //Check if the effects have done what they state they do
+        foreach(State state in getEffects()){
 
-                    }
+            if(!agent.worldState.Find(x => x.key == state.key).value.Equals(state.value)){
 
-                }
+                allConditionsMet = false;
 
-                return npc.pathFinder.CalculateCost(npc.transform.position,closest);
-            case "Collect":
-
-                //Resource amount of resource? time needed to collect? etc
-
-                return 1;
-
-            default:
-
-                return cost;
+            }
 
         }
+
+        return allConditionsMet;
 
     }
 

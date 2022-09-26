@@ -13,7 +13,7 @@ public class GOAPActionPlanner : MonoBehaviour
 
     }
 
-    public Plan FindBestPlan(GOAPGoal currentGoal){
+    public GOAPPlan FindBestPlan(GOAPGoal currentGoal){
 
         List<GOAPState> dws = currentGoal.desiredWorldState;
         
@@ -23,7 +23,7 @@ public class GOAPActionPlanner : MonoBehaviour
 
         }
 
-        (TreeNode<PlanStep> tree, bool hasSolution) =  BuidPlanTree(new TreeNode<PlanStep>(new PlanStep(agent.currentAction,dws)));
+        (TreeNode<GOAPPlanStep> tree, bool hasSolution) =  BuidPlanTree(new TreeNode<GOAPPlanStep>(new GOAPPlanStep(agent.currentAction,dws)));
 
         if(!hasSolution){
 
@@ -33,7 +33,7 @@ public class GOAPActionPlanner : MonoBehaviour
         } else {
             
             //Debug.Log("Found Valid Tree");
-            List<Plan> plans = treeToPlan(tree);
+            List<GOAPPlan> plans = treeToPlan(tree);
 
             //PrintPlan(plans[0]);
 
@@ -44,25 +44,25 @@ public class GOAPActionPlanner : MonoBehaviour
 
     }
 
-    List<Plan> treeToPlan(TreeNode<PlanStep> tree){
+    List<GOAPPlan> treeToPlan(TreeNode<GOAPPlanStep> tree){
 
-        List<Plan> plans = new List<Plan>();
+        List<GOAPPlan> plans = new List<GOAPPlan>();
 
         //If the tree doesn't have any children then just add the roots action to the plan
         if(tree.children.Count == 0){
 
             GOAPAction a = tree.value.action;
 
-            plans.Add(new Plan(new List<GOAPAction>(){a}, tree.value.action.getCost(agent.worldState)));
+            plans.Add(new GOAPPlan(new List<GOAPAction>(){a}, tree.value.action.getCost(agent.worldState)));
 
             return plans;
 
         }
 
         //Loop through every branch in the tree and add its actions to the plan
-        foreach(TreeNode<PlanStep> branch in tree.children){
+        foreach(TreeNode<GOAPPlanStep> branch in tree.children){
 
-            foreach(Plan childPlan in treeToPlan(branch)){
+            foreach(GOAPPlan childPlan in treeToPlan(branch)){
 
                 childPlan.AddToPlan(tree.value.action,tree.value.action.getCost(agent.worldState));
                 plans.Add(childPlan);
@@ -76,12 +76,12 @@ public class GOAPActionPlanner : MonoBehaviour
 
     }
 
-    public Plan GetCheapestPlan(List<Plan> plans){
+    public GOAPPlan GetCheapestPlan(List<GOAPPlan> plans){
 
-        Plan bestPlan = plans[0];
+        GOAPPlan bestPlan = plans[0];
 
         //Loop through each plan and chechk which has the lowest total cost
-        foreach(Plan plan in plans){
+        foreach(GOAPPlan plan in plans){
 
             //PrintPlan(plan);
             if(plan.cost < bestPlan.cost){
@@ -96,7 +96,7 @@ public class GOAPActionPlanner : MonoBehaviour
 
     }
 
-    public (TreeNode<PlanStep>, bool) BuidPlanTree(TreeNode<PlanStep> stepTree){
+    public (TreeNode<GOAPPlanStep>, bool) BuidPlanTree(TreeNode<GOAPPlanStep> stepTree){
 
         bool hasSolution = false;
 
@@ -150,9 +150,9 @@ public class GOAPActionPlanner : MonoBehaviour
 
                 //Debug.Log("Action " + action.actionName + " is valid");
 
-                (TreeNode<PlanStep> branch, bool branchHasSolution) = BuidPlanTree(
-                    new TreeNode<PlanStep>(
-                        new PlanStep(action,
+                (TreeNode<GOAPPlanStep> branch, bool branchHasSolution) = BuidPlanTree(
+                    new TreeNode<GOAPPlanStep>(
+                        new GOAPPlanStep(action,
                         new List<GOAPState>(tempDesiredWorldState))));
 
                 if(tempDesiredWorldState.Count == 0 || branchHasSolution){
@@ -171,7 +171,7 @@ public class GOAPActionPlanner : MonoBehaviour
 
     }
 
-    void PrintPlan(Plan plan){
+    void PrintPlan(GOAPPlan plan){
 
         //Debug.Log("PLAN - Steps:" + plan.actions.Count);        
 

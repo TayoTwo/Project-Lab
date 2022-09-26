@@ -6,6 +6,13 @@ TagManager:
   tags:
   - Agent
   - EndKey
+  - Tree
+  - Ore
+  - Enemy
+  - Workbench
+  - Shroom
+  - Obstacle
+  - Plane
   layers:
   - Default
   - TransparentFX
