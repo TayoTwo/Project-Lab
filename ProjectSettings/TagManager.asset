@@ -12,6 +12,7 @@ TagManager:
   - Workbench
   - Shroom
   - Obstacle
+  - Plane
   layers:
   - Default
   - TransparentFX

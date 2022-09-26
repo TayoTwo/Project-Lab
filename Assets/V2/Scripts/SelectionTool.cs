@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class SelectionTool : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class SelectionTool : MonoBehaviour
     public List<Goal> goals;
     public bool buildMode;
     public int blockType = -1;
+    public CameraController cameraController;
+    public LayerMask UIlayer;
     InputMaster inputMaster;
     GameObject moveToPoint;
 
@@ -67,13 +70,17 @@ public class SelectionTool : MonoBehaviour
         RaycastHit hitPoint;
         Transform hitObject;
 
-        if(Physics.Raycast(ray,out hitPoint)){
+        if(Physics.Raycast(ray,out hitPoint) && !EventSystem.current.IsPointerOverGameObject()){
 
             hitObject = hitPoint.transform.root;
 
             selectedObject = hitObject.gameObject;
 
             if(selectedObject.GetComponent<Agent>() != null){
+
+                Debug.Log("SELECTED AGENT");
+
+                cameraController.ChangeTarget(selectedObject.transform);
 
                 actionPanel.SetActive(true);
                 worldStatePanel.SetActive(true);
@@ -84,7 +91,9 @@ public class SelectionTool : MonoBehaviour
 
                 }
 
-            } else {
+            } else if(selectedObject.layer != UIlayer){
+
+                Debug.Log(selectedObject.name);
 
                 buildMode = false;
                 actionPanel.SetActive(false);
@@ -109,6 +118,7 @@ public class SelectionTool : MonoBehaviour
             //Debug.Log("Right clicked " + hitPoint.transform.root.tag);
 
             moveToPoint.transform.position = hitPoint.point;
+            cameraController.ChangeTarget(moveToPoint.transform);
 
             if(selectedObject.GetComponent<Agent>() != null){
 
@@ -116,7 +126,6 @@ public class SelectionTool : MonoBehaviour
                 agent.currentAction = null;
 
                 if(buildMode){
-
 
                     if(agent.GetComponent<PlaceBlockAction>() != null){
 

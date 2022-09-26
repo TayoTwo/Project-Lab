@@ -33,7 +33,6 @@ public class Agent : MonoBehaviour
     public Backpack backpack;
     public Hunger hunger;
     Agent caller;
-
     ActionPlanner actionPlanner;
     NavMeshAgent navMeshAgent;
     AnimationController animationController;
